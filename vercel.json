@@ -29,5 +29,11 @@
   ],
   "env": {
     "NEXT_PUBLIC_API_URL": "https://api.freobus.com"
-  }
+  },
+  "build": {
+    "env": {
+      "NEXT_TELEMETRY_DISABLED": "1"
+    }
+  },
+  "ignoreCommand": "bash ./vercel-ignore-build-step.sh"
 } 
