@@ -14,6 +14,5 @@
       "main": true
     }
   },
-  "rootDirectory": ".",
   "outputDirectory": ".next"
 } 
