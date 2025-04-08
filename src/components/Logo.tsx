@@ -7,14 +7,25 @@ const Logo = () => {
   const accentGoldLight = '#FFD700';
   const darkGreen = '#386641'; // A darker shade for the wordmark
   const neutralLight = '#F4F4F4';
+  const freoBusFont = 'Inter, sans-serif'; // Using Inter font from Next.js
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        // Consider adding responsive styling here or in your CSS
+      }}
+    >
       <motion.svg
         width="80"
         height="80"
         viewBox="0 0 80 80"
         style={{ marginRight: '16px' }}
+        // Example subtle animation:
+        initial={{ scale: 1 }}
+        animate={{ scale: 1.05 }}
+        transition={{ duration: 1, repeat: Infinity, repeatType: 'reverse' }}
       >
         {/* Central Gold Area */}
         <motion.radialGradient
@@ -27,7 +38,16 @@ const Logo = () => {
           <stop offset="0%" stopColor={accentGoldLight} />
           <stop offset="100%" stopColor="rgba(255, 215, 0, 0.5)" /> {/* Fading out gold */}
         </motion.radialGradient>
-        <motion.circle cx="40" cy="40" r="30" fill="url(#goldGradient)" />
+        <motion.circle
+          cx="40"
+          cy="40"
+          r="30"
+          fill="url(#goldGradient)"
+          // Example subtle animation for gold:
+          initial={{ opacity: 0.9 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5, repeat: Infinity, repeatType: 'reverse' }}
+        />
 
         {/* Emanating Green Pathways */}
         {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => {
@@ -49,6 +69,9 @@ const Logo = () => {
               strokeWidth="3"
               fill="transparent"
               strokeLinecap="round"
+              // Example subtle animation on hover:
+              whileHover={{ strokeWidth: 4 }}
+              transition={{ duration: 0.2 }}
             />
           );
         })}
@@ -76,11 +99,14 @@ const Logo = () => {
       </motion.svg>
       <motion.h1
         style={{
-          fontFamily: 'sans-serif', // Replace with your chosen font
+          fontFamily: freoBusFont,
           fontSize: '2em',
           color: darkGreen,
           fontWeight: 'bold',
         }}
+        // Example subtle animation on hover for text:
+        whileHover={{ scale: 1.05 }}
+        transition={{ duration: 0.2 }}
       >
         FreoBus
       </motion.h1>
