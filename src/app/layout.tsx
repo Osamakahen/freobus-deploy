@@ -1,7 +1,7 @@
 import { Inter } from 'next/font/google'
 import type { Metadata } from 'next'
 import './globals.css'
-import Image from 'next/image'
+import Logo from '@/components/Logo'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,14 +21,7 @@ export default function RootLayout({
         <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Image
-                src="/freobus-logo.svg"
-                alt="FreoBus Logo"
-                width={200}
-                height={50}
-                priority
-                className="h-8 w-auto"
-              />
+              <Logo />
             </div>
           </div>
         </header>
