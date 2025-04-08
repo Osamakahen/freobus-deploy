@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="50" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Bus Icon -->
+  <path d="M40 15H20C18.3431 15 17 16.3431 17 18V32C17 33.6569 18.3431 35 20 35H40C41.6569 35 43 33.6569 43 32V18C43 16.3431 41.6569 15 40 15Z" fill="#1A5D1A"/>
+  <path d="M25 25H35V30H25V25Z" fill="#FFD700"/>
+  <circle cx="25" cy="40" r="3" fill="#FFD700"/>
+  <circle cx="35" cy="40" r="3" fill="#FFD700"/>
+  
+  <!-- Text -->
+  <text x="60" y="32" font-family="Arial" font-size="24" font-weight="bold" fill="#1A5D1A">Freo</text>
+  <text x="120" y="32" font-family="Arial" font-size="24" font-weight="bold" fill="#FFD700">Bus</text>
+</svg> 
