@@ -19,15 +19,15 @@ declare global {
 
 declare module 'framer-motion' {
   interface MotionStyle {
-    opacity?: number | string | any
-    scale?: number | string | any
+    opacity?: number | string;
+    scale?: number | string;
   }
 }
 
 declare module 'next/link' {
   interface LinkProps extends ComponentProps<'a'> {
-    href: string
-    children?: React.ReactNode
+    href: string;
+    children: React.ReactNode;
   }
 }
 

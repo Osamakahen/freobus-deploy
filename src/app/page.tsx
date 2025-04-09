@@ -1,13 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 
-export default function Page() {
-  const [activeTab, setActiveTab] = useState('features');
+const colors = {
+  primary: '#2563eb',
+  secondary: '#4f46e5',
+  accent: '#f59e0b',
+  neutral: '#1f2937',
+  neutralLight: '#6b7280',
+  success: '#10b981',
+  error: '#ef4444',
+  background: '#ffffff',
+  text: '#111827',
+};
+
+export default function Home() {
   const { scrollYProgress } = useScroll();
-  
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
 
@@ -43,7 +53,7 @@ export default function Page() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#1E1E1E] text-white">
+    <main className="min-h-screen bg-white">
       <motion.section 
         className="min-h-screen flex flex-col items-center justify-center text-center p-4"
         style={{ opacity, scale }}
