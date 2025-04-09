@@ -5,10 +5,6 @@ const nextConfig = {
   images: {
     domains: ['images.unsplash.com'],
   },
-  // Remove experimental.serverActions as it's now enabled by default
-  experimental: {
-    // Add any other experimental features you need here
-  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
