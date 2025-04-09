@@ -11,6 +11,18 @@ const nextConfig = {
   // images: {
   //   unoptimized: true,
   // },
+  // Configure webpack to handle client-side features
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    return config;
+  },
 };
 
 module.exports = nextConfig;
