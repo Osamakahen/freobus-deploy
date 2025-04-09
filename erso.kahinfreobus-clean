@@ -1,0 +1,5 @@
+[33m425ba8a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fix: Clean up build and deployment issues
+[33mb6df4e2[m Fix 404 page and Next.js config: - Fix not-found.tsx encoding issues - Remove experimental.serverActions (now enabled by default) - Clean up next.config.js
+[33m0ab0638[m Fix 404 page and Next.js config: - Remove experimental.serverActions (now enabled by default) - Clean up next.config.js - Fix not-found page encoding
+[33mcb05118[m Fix 404 handling: Remove [...not_found] directory and fix not-found.tsx formatting
+[33ma3b6622[m Fix build error: Mark Logo component as client component
