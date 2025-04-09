@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['localhost'],
+    domains: ['images.unsplash.com'],
   },
   // Webpack configuration to handle module resolution
   webpack: (config, { isServer }) => {
@@ -24,6 +24,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    // Add any other experimental features here if needed
+  }
 };
 
 module.exports = nextConfig;
