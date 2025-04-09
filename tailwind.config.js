@@ -8,6 +8,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        primary: {
+          light: '#6F3AFF',
+          DEFAULT: '#5A2FD9',
+          dark: '#4A26B3',
+        },
+        secondary: {
+          light: '#00F0FF',
+          DEFAULT: '#00C8D4',
+          dark: '#00A0AA',
+        },
+        background: {
+          light: '#2A2A2A',
+          DEFAULT: '#1E1E1E',
+          dark: '#141414',
+        },
         freobus: {
           'green-light': '#A7D1EB',
           'green-medium': '#8FBC8F',
@@ -22,6 +37,9 @@ module.exports = {
           'text-secondary': '#6B7280',
           'text-accent': '#FFC107',
         },
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

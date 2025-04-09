@@ -1,7 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const Logo = () => {
+interface LogoProps {
+  className?: string;
+}
+
+const Logo = ({ className = '' }: LogoProps) => {
   const primaryGreenLight = '#A7D1EB';
   const primaryGreenMedium = '#8FBC8F';
   const accentGoldLight = '#FFD700';
@@ -11,9 +15,8 @@ const Logo = () => {
 
   return (
     <div
+      className={`flex items-center ${className}`}
       style={{
-        display: 'flex',
-        alignItems: 'center',
         // Consider adding responsive styling here or in your CSS
       }}
     >

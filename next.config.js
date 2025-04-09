@@ -1,24 +1,16 @@
-/** @type {import('next').NextConfig} */
+﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['freobus.com'],
-    unoptimized: true,
+    domains: ['localhost'],
   },
-  // Enable static exports
-  output: 'standalone',
-  // Ensure proper handling of environment variables
-  env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  webpack: (config) => {
-    config.resolve.fallback = { fs: false, net: false, tls: false };
-    return config;
-  },
+  // Enable static exports if needed
+  // output: 'export',
+  // Disable image optimization for static exports
+  // images: {
+  //   unoptimized: true,
+  // },
 };
 
-module.exports = nextConfig
+module.exports = nextConfig;
