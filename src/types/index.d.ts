@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react'
-import { motion } from 'framer-motion'
+import type { MotionProps } from 'framer-motion'
 
 declare global {
   namespace JSX {
@@ -19,8 +19,8 @@ declare global {
 
 declare module 'framer-motion' {
   interface MotionStyle {
-    opacity?: number | string;
-    scale?: number | string;
+    opacity?: number;
+    scale?: number;
   }
 }
 

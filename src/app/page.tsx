@@ -16,7 +16,7 @@ const colors = {
   text: '#111827',
 };
 
-export default function Home() {
+export default function Page() {
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
