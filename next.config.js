@@ -23,6 +23,10 @@ const nextConfig = {
     }
     return config;
   },
+  // Ensure proper handling of client components
+  experimental: {
+    serverActions: true,
+  },
 };
 
 module.exports = nextConfig;
