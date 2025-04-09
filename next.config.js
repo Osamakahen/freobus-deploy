@@ -16,13 +16,9 @@ const nextConfig = {
     }
     return config;
   },
-  // Enable static exports if needed
-  // output: 'export',
-  // Disable image optimization for static exports
-  // images: {
-  //   unoptimized: true,
-  // },
-  // Optimize development performance
+  // Enable standalone output for Vercel
+  output: 'standalone',
+  // Ignore TypeScript and ESLint errors during build
   typescript: {
     ignoreBuildErrors: true,
   },
