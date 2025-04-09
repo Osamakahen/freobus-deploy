@@ -22,7 +22,7 @@ declare module 'framer-motion' {
 declare module 'next/link' {
   interface LinkProps extends ComponentProps<'a'> {
     href: string
-    children: React.ReactNode
+    children?: React.ReactNode
   }
 }
 
