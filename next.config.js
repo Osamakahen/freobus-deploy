@@ -1,11 +1,12 @@
 ﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',  // Static export for Vercel
   images: {
-    unoptimized: true,  // Required for static export
+    unoptimized: true,
     domains: ['images.unsplash.com']
   },
-  // Remove experimental section as it's not needed
+  generateBuildId: async () => {
+    return 'build-' + Date.now()
+  }
 }
 
 module.exports = nextConfig
