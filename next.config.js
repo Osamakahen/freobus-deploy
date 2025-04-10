@@ -5,13 +5,13 @@ const nextConfig = {
     domains: ['images.unsplash.com'],
     unoptimized: true
   },
-  eslint: {
-    // Don't fail builds on ESLint errors during deployment
-    ignoreDuringBuilds: true
-  },
+  // Disable type checking during builds for better performance
   typescript: {
-    // Don't fail builds on TS errors during deployment
     ignoreBuildErrors: true
+  },
+  // Disable ESLint during builds for better performance
+  eslint: {
+    ignoreDuringBuilds: true
   }
 };
 
