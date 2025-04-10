@@ -9,14 +9,18 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          light: '#6F3AFF',
-          DEFAULT: '#5A2FD9',
-          dark: '#4A26B3',
+          greenLight: '#A7D1EB',
+          greenMedium: '#8FBC8F',
+          dark: '#386641',
         },
-        secondary: {
-          light: '#00F0FF',
-          DEFAULT: '#00C8D4',
-          dark: '#00A0AA',
+        accent: {
+          goldLight: '#FFD700',
+          yellow: '#FFD700',
+        },
+        neutral: {
+          dark: '#1E1E1E',
+          medium: '#2A2A2A',
+          light: '#F4F4F4',
         },
         background: {
           light: '#2A2A2A',
@@ -42,6 +46,9 @@ module.exports = {
         sans: ['Inter', 'sans-serif'],
       },
       backgroundImage: {
+        'hero-gradient': 'linear-gradient(180deg, var(--primary-green-medium-20) 0%, var(--neutral-dark) 100%)',
+        'text-gradient': 'linear-gradient(135deg, var(--primary-green-light) 0%, var(--accent-gold-light) 100%)',
+        'button-gradient': 'linear-gradient(135deg, var(--primary-green-light) 0%, var(--accent-yellow) 100%)',
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'gradient-freobus': 'linear-gradient(to right, var(--tw-gradient-stops))',

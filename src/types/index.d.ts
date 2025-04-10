@@ -11,6 +11,8 @@ declare global {
       main: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
       section: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
       footer: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
+      nav: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
+      strong: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
       a: React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>
       ul: React.DetailedHTMLProps<React.HTMLAttributes<HTMLUListElement>, HTMLUListElement>
       li: React.DetailedHTMLProps<React.LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>
@@ -25,6 +27,9 @@ declare module 'framer-motion' {
     scale?: number | string | import('framer-motion').MotionValue<number>;
     backgroundColor?: string;
     color?: string;
+    background?: string;
+    WebkitBackgroundClip?: string;
+    WebkitTextFillColor?: string;
   }
 }
 
@@ -33,6 +38,7 @@ declare module 'next/link' {
     href: string;
     children?: React.ReactNode;
     className?: string;
+    style?: React.CSSProperties;
   }
 }
 
