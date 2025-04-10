@@ -97,6 +97,23 @@ const scaleOnHover = {
   whileTap: { scale: 0.95 }
 };
 
+const pulseAnimation = {
+  initial: { scale: 1, boxShadow: '0 0 0 0 rgba(255, 193, 7, 0.4)' },
+  animate: {
+    scale: [1, 1.02, 1],
+    boxShadow: [
+      '0 0 0 0 rgba(255, 193, 7, 0.4)',
+      '0 0 0 20px rgba(255, 193, 7, 0)',
+      '0 0 0 0 rgba(255, 193, 7, 0)'
+    ],
+    transition: {
+      duration: 2,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  }
+};
+
 export default function Page() {
   const [activeAudience, setActiveAudience] = useState<keyof typeof audienceContent>('users');
   const { scrollYProgress } = useScroll();
@@ -114,18 +131,28 @@ export default function Page() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-xl font-bold text-[#FFC107]">
-              FreoBus
+            <Link href="/" className="flex items-center space-x-2">
+              <Image
+                src="/freobus-logo.svg"
+                alt="FreoBus Logo"
+                width={32}
+                height={32}
+                className="w-8 h-8"
+              />
+              <span className="text-xl font-bold text-[#FFC107]">FreoBus</span>
             </Link>
-            <div className="hidden md:flex space-x-8">
+            <div className="hidden md:flex items-center space-x-8">
               <Link href="/marketplace" className="hover:text-[#FFC107] transition-colors">
                 Web3 Shopping Mall
               </Link>
               <Link href="/learn/decentralization" className="hover:text-[#FFC107] transition-colors">
                 What's Decentralization?
               </Link>
-              <Link href="/connect-wallet" className="hover:text-[#FFC107] transition-colors">
-                Connect your Wallet
+              <Link 
+                href="/connect-wallet" 
+                className="px-4 py-2 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-semibold hover:bg-[#FFD700] transition-all"
+              >
+                Connect Your Wallet
               </Link>
             </div>
           </div>
@@ -167,6 +194,9 @@ export default function Page() {
             <Link href="/wallet/create">
               <motion.button
                 {...scaleOnHover}
+                variants={pulseAnimation}
+                initial="initial"
+                animate="animate"
                 className="px-8 py-4 border-2 border-[#FFC107] text-[#FFC107] rounded-lg font-bold text-lg hover:bg-[#FFC107] hover:text-[#1E1E1E] transition-all"
               >
                 Get Your FreoWallet
