@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import Image from 'next/image';
+import Logo from '@/components/Logo';
 import '@fontsource/inter';
 
 interface NavItem {
@@ -131,16 +131,7 @@ export default function Page() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center space-x-2">
-              <Image
-                src="/freobus-logo.svg"
-                alt="FreoBus Logo"
-                width={32}
-                height={32}
-                className="w-8 h-8"
-              />
-              <span className="text-xl font-bold text-[#FFC107]">FreoBus</span>
-            </Link>
+            <Logo className="py-2" />
             <div className="hidden md:flex items-center space-x-8">
               <Link href="/marketplace" className="hover:text-[#FFC107] transition-colors">
                 Web3 Shopping Mall
