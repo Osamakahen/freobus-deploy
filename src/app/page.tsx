@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import Logo from '@/components/Logo';
 import '@fontsource/inter';
 
@@ -12,9 +13,11 @@ interface NavItem {
 }
 
 interface ValueProp {
-  emoji: string;
   title: string;
   description: string;
+  stickyMessage: string;
+  imageSrc: string;
+  alt: string;
 }
 
 interface AudienceContent {
@@ -32,19 +35,32 @@ const navItems: NavItem[] = [
 
 const valueProps: ValueProp[] = [
   {
-    emoji: '🔒',
     title: 'Secure by Design',
-    description: 'End-to-end encryption and advanced security protocols protect your assets.',
+    description: 'Built with security at its core, ensuring your assets are protected at all times.',
+    stickyMessage: 'Your Security First',
+    imageSrc: '/security-shield.png',
+    alt: 'Security Shield Icon'
   },
   {
-    emoji: '⚡',
     title: 'Lightning Fast',
-    description: 'Instant transactions and seamless interactions with Web3 applications.',
+    description: 'Experience instant transactions and responsive interface.',
+    stickyMessage: 'Speed Matters',
+    imageSrc: '/lightning-speed.png',
+    alt: 'Lightning Speed Icon'
   },
   {
-    emoji: '🌐',
     title: 'Universal Access',
-    description: 'One wallet for all your Web3 needs, no more switching between apps.',
+    description: 'Access your wallet from anywhere, on any device.',
+    stickyMessage: 'Always Available',
+    imageSrc: '/universal-access.png',
+    alt: 'Universal Access Icon'
+  },
+  {
+    title: 'User-Focused',
+    description: 'Intuitive design that puts your needs first.',
+    stickyMessage: 'Built for You',
+    imageSrc: '/user-focused.png',
+    alt: 'User Focus Icon'
   },
 ];
 
@@ -199,28 +215,33 @@ export default function Page() {
 
       {/* Value Props Section */}
       <section className="py-24 bg-[#2A2A2A]">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-3 gap-8">
-            {valueProps.map((prop) => (
+        <div className="container mx-auto px-6 grid md:grid-cols-4 gap-8">
+          {valueProps.map((prop, index) => (
+            <motion.div
+              key={prop.title}
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className={`p-8 rounded-xl ${
+                index % 2 === 0 ? 'bg-[#1E1E1E]' : 'bg-[#222222]'
+              }`}
+            >
+              <p className="text-sm text-[#FFC107] font-semibold mb-2 uppercase tracking-wider">
+                {prop.stickyMessage}
+              </p>
               <motion.div
-                key={prop.title}
-                variants={fadeInUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="p-8 rounded-xl bg-[#1E1E1E]"
+                className={`relative w-20 h-20 mb-4 overflow-hidden rounded-[12px] ${
+                  index === 1 || index === 3 ? 'rotate-6' : '-rotate-3'
+                }`}
+                {...scaleOnHover}
               >
-                <motion.div
-                  className="text-6xl mb-4"
-                  {...scaleOnHover}
-                >
-                  {prop.emoji}
-                </motion.div>
-                <h3 className="text-2xl font-bold mb-4">{prop.title}</h3>
-                <p className="text-gray-300">{prop.description}</p>
+                <Image src={prop.imageSrc} alt={prop.alt} layout="fill" objectFit="cover" />
               </motion.div>
-            ))}
-          </div>
+              <h3 className="text-2xl font-bold mb-4">{prop.title}</h3>
+              <p className="text-gray-300">{prop.description}</p>
+            </motion.div>
+          ))}
         </div>
       </section>
 
