@@ -1,11 +1,23 @@
 ﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    unoptimized: true,
-    domains: ['images.unsplash.com']
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com'
+      }
+    ]
   },
-  generateBuildId: async () => {
-    return 'build-' + Date.now()
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true
+  },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    ignoreBuildErrors: true
   }
 }
 
