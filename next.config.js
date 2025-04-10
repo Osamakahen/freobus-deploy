@@ -1,24 +1,18 @@
 ﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com'
-      }
-    ]
+    domains: ['images.unsplash.com'],
+    unoptimized: true
   },
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
+    // Don't fail builds on ESLint errors during deployment
     ignoreDuringBuilds: true
   },
   typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
+    // Don't fail builds on TS errors during deployment
     ignoreBuildErrors: true
   }
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
