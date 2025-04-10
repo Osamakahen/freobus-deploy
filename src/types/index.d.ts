@@ -1,4 +1,6 @@
 import { ComponentProps } from 'react'
+import type { HTMLMotionProps } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 declare global {
   namespace JSX {
@@ -13,31 +15,45 @@ declare global {
       section: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
       footer: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
       a: React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>
+      ul: React.DetailedHTMLProps<React.HTMLAttributes<HTMLUListElement>, HTMLUListElement>
+      li: React.DetailedHTMLProps<React.LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>
+      button: React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
     }
   }
 }
 
 declare module 'framer-motion' {
+  interface MotionProps extends HTMLMotionProps<'section'> {
+    style?: {
+      opacity?: number;
+      scale?: number;
+      backgroundColor?: string;
+      color?: string;
+    };
+  }
+
   interface MotionStyle {
-    opacity?: number;
-    scale?: number;
+    opacity?: number | string | any;
+    scale?: number | string | any;
+    backgroundColor?: string;
+    color?: string;
   }
 }
 
 declare module 'next/link' {
-  interface LinkProps extends ComponentProps<'a'> {
+  interface LinkProps {
     href: string;
     children: React.ReactNode;
-    style?: React.CSSProperties & {
-      ':hover'?: React.CSSProperties;
-    };
+    className?: string;
+    legacyBehavior?: boolean;
+    key?: string | number;
   }
 }
 
 export interface Feature {
   title: string;
   description: string;
-  icon: string;
+  icon?: React.ReactNode;
 }
 
 export interface CTAItem {

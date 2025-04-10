@@ -59,7 +59,8 @@ export default function Page() {
     <main className="min-h-screen" style={{ backgroundColor: colors.background.light }}>
       <motion.section 
         className="min-h-screen flex flex-col items-center justify-center text-center p-4"
-        style={{ opacity, scale }}
+        initial={{ opacity: 1, scale: 1 }}
+        animate={{ opacity, scale }}
       >
         <div className="mb-8 relative w-32 h-32">
           <Image
@@ -77,24 +78,15 @@ export default function Page() {
           The next generation digital wallet for secure, instant, and smart transactions.
         </p>
         <div className="flex gap-4">
-          <Link 
-            href="/demo" 
-            className="px-8 py-4 text-white rounded-lg font-semibold transition-all"
-            style={{ backgroundColor: colors.primary }}
-          >
-            Try Demo
+          <Link href="/demo" legacyBehavior>
+            <a className="px-6 py-3 text-lg font-semibold text-white bg-primary rounded-lg hover:bg-primary-dark transition-colors">
+              Try Demo
+            </a>
           </Link>
-          <Link 
-            href="/docs" 
-            className="px-8 py-4 rounded-lg font-semibold transition-all"
-            style={{ 
-              borderColor: colors.primary,
-              borderWidth: 2,
-              borderStyle: 'solid',
-              color: colors.primary
-            }}
-          >
-            Documentation
+          <Link href="/docs" legacyBehavior>
+            <a className="px-6 py-3 text-lg font-semibold text-gray-700 border-2 border-gray-300 rounded-lg hover:border-gray-400 transition-colors">
+              Documentation
+            </a>
           </Link>
         </div>
       </motion.section>
@@ -107,7 +99,7 @@ export default function Page() {
           <div className="grid md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <div 
-                key={index}
+                key={`feature-${index}`}
                 className="p-6 rounded-xl"
                 style={{ backgroundColor: colors.background.dark }}
               >
@@ -127,14 +119,11 @@ export default function Page() {
           <h2 className="text-4xl font-bold mb-12 text-center text-white">Get Started</h2>
           <div className="grid md:grid-cols-2 gap-8">
             {ctaItems.map((item, index) => (
-              <Link 
-                key={index}
-                href={item.href}
-                className="p-8 rounded-xl transition-all block"
-                style={{ backgroundColor: colors.background.light }}
-              >
-                <h3 className="text-2xl font-semibold mb-2 text-white">{item.title}</h3>
-                <p style={{ color: colors.text.secondary }}>{item.description}</p>
+              <Link key={index} href={item.href} legacyBehavior>
+                <a className="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                  <p className="text-gray-600">{item.description}</p>
+                </a>
               </Link>
             ))}
           </div>
