@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="240" fill="#6F3AFF" />
+  
+  <!-- Letter F -->
+  <path d="M180 160H320V200H220V240H300V280H220V360H180V160Z" fill="white"/>
+  
+  <!-- Letter B -->
+  <path d="M320 160C320 160 360 160 360 200C360 220 350 235 340 240C350 245 360 260 360 280C360 320 320 320 320 320H280V160H320ZM320 200H320V240H320C320 240 330 235 330 220C330 205 320 200 320 200ZM320 280C320 280 330 275 330 260C330 245 320 240 320 240H320V280Z" fill="white"/>
+</svg> 

@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const colors = {
   primary: '#6F3AFF',
@@ -57,22 +58,31 @@ export default function Page() {
         className="min-h-screen flex flex-col items-center justify-center text-center p-4"
         style={{ opacity, scale }}
       >
-        <h1 className="text-5xl md:text-7xl font-bold mb-6">
-          FreoWallet by FreoBus
+        <div className="mb-8 relative w-32 h-32">
+          <Image
+            src="/logo.svg"
+            alt="FreoBus Logo"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+        <h1 className="text-5xl md:text-7xl font-bold mb-6 text-gray-900">
+          FreoWallet
         </h1>
-        <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl">
+        <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl">
           The next generation digital wallet for secure, instant, and smart transactions.
         </p>
         <div className="flex gap-4">
           <Link 
             href="/demo" 
-            className="px-8 py-4 bg-[#6F3AFF] rounded-lg font-semibold transition-all hover:bg-[#7d4fff]"
+            className="px-8 py-4 bg-[#6F3AFF] text-white rounded-lg font-semibold transition-all hover:bg-[#7d4fff]"
           >
             Try Demo
           </Link>
           <Link 
             href="/docs" 
-            className="px-8 py-4 border-2 border-[#6F3AFF] rounded-lg font-semibold transition-all hover:bg-[#6F3AFF]/10"
+            className="px-8 py-4 border-2 border-[#6F3AFF] text-[#6F3AFF] rounded-lg font-semibold transition-all hover:bg-[#6F3AFF]/10"
           >
             Documentation
           </Link>
