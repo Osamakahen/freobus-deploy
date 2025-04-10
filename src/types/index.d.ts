@@ -1,5 +1,4 @@
 import { ComponentProps } from 'react'
-import type { MotionProps } from 'framer-motion'
 
 declare global {
   namespace JSX {
@@ -13,6 +12,7 @@ declare global {
       main: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
       section: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
       footer: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
+      a: React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>
     }
   }
 }

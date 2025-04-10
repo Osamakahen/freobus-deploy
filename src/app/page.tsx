@@ -5,15 +5,14 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 
 const colors = {
-  primary: '#2563eb',
-  secondary: '#4f46e5',
-  accent: '#f59e0b',
-  neutral: '#1f2937',
-  neutralLight: '#6b7280',
-  success: '#10b981',
-  error: '#ef4444',
-  background: '#ffffff',
-  text: '#111827',
+  primary: '#6F3AFF',
+  hover: '#7d4fff',
+  background: '#1E1E1E',
+  text: '#ffffff',
+  gray: {
+    400: '#9CA3AF',
+    900: '#111827'
+  }
 };
 
 export default function Page() {
