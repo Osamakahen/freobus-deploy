@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { colors, animations, gradients } from '@/constants/theme';
+import '@fontsource/inter';
 
 interface NavItem {
   label: string;
@@ -69,6 +69,34 @@ const audienceContent: Record<string, AudienceContent> = {
   },
 };
 
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.5
+    }
+  }
+};
+
+const navVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.3
+    }
+  }
+};
+
+const scaleOnHover = {
+  whileHover: { scale: 1.05 },
+  whileTap: { scale: 0.95 }
+};
+
 export default function Page() {
   const [activeAudience, setActiveAudience] = useState<keyof typeof audienceContent>('users');
   const { scrollYProgress } = useScroll();
@@ -76,83 +104,94 @@ export default function Page() {
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
 
   return (
-    <main className="min-h-screen bg-neutral-dark text-white">
-      {/* Hero Section */}
-      <div className="relative min-h-screen" style={{ background: gradients.heroBackground }}>
-        <nav className="absolute top-0 left-0 right-0 z-10 px-6 py-4">
-          <div className="max-w-7xl mx-auto flex justify-between items-center">
-            <motion.div {...animations.fadeInLeft}>
-              <Link href="/" className="text-2xl font-bold">
-                FreoBus
+    <main className="min-h-screen bg-[#1E1E1E] text-white">
+      {/* Navigation */}
+      <motion.nav
+        variants={navVariants}
+        initial="hidden"
+        animate="visible"
+        className="fixed w-full top-0 z-50 bg-[#1E1E1E]/80 backdrop-blur-sm"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <Link href="/" className="text-xl font-bold text-[#FFC107]">
+              FreoBus
+            </Link>
+            <div className="hidden md:flex space-x-8">
+              <Link href="/marketplace" className="hover:text-[#FFC107] transition-colors">
+                Web3 Shopping Mall
               </Link>
-            </motion.div>
-            <motion.div {...animations.fadeInRight} className="hidden md:flex space-x-8">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="hover:text-accent-yellow transition-colors"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </motion.div>
+              <Link href="/learn/decentralization" className="hover:text-[#FFC107] transition-colors">
+                What's Decentralization?
+              </Link>
+              <Link href="/connect-wallet" className="hover:text-[#FFC107] transition-colors">
+                Connect your Wallet
+              </Link>
+            </div>
           </div>
-        </nav>
+        </div>
+      </motion.nav>
 
-        <motion.div
-          className="container mx-auto px-6 pt-32 text-center"
-          style={{ opacity, scale }}
-        >
+      {/* Hero Section */}
+      <motion.section
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+        className="relative h-screen flex items-center justify-center px-4 md:px-8 bg-[#8FBC8F] bg-gradient-to-b from-[#8FBC8F]/90 to-[#1E1E1E]"
+      >
+        <div className="text-center max-w-4xl">
           <motion.h1
-            className="text-6xl md:text-7xl font-bold mb-6"
-            style={{ background: gradients.textGradient, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
-            {...animations.fadeIn}
+            variants={fadeInUp}
+            className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-[#FFC107]"
           >
-            Your Gateway to Web3
+            Unlock the World of Web3 with <span className="text-[#FFC107]">FreoBus</span>
           </motion.h1>
           <motion.p
-            className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto"
-            {...animations.fadeIn}
+            variants={fadeInUp}
+            className="text-xl md:text-2xl mb-12 text-gray-200"
           >
-            <strong>FreoWallet</strong> is your magic pass to the decentralized web.
-            No more wallet pop-ups, no more jargon - just seamless access to Web3.
+            <span className="font-bold">FreoWallet</span> Magically Empowering you to Decentralization
           </motion.p>
           <motion.div
+            variants={fadeInUp}
             className="flex flex-col md:flex-row gap-6 justify-center"
-            {...animations.fadeIn}
           >
-            <Link
-              href="/explore"
-              className="px-8 py-4 rounded-lg font-semibold text-white"
-              style={{ background: gradients.buttonGradient }}
-            >
-              Explore dApps
+            <Link href="/marketplace">
+              <motion.button
+                {...scaleOnHover}
+                className="px-8 py-4 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-bold text-lg hover:bg-[#FFD700] transition-colors"
+              >
+                Web3 Shopping Mall
+              </motion.button>
             </Link>
-            <Link
-              href="/demo"
-              className="px-8 py-4 rounded-lg font-semibold text-white border-2 border-white/20 hover:border-white/40 transition-colors"
-            >
-              See How It Works
+            <Link href="/wallet/create">
+              <motion.button
+                {...scaleOnHover}
+                className="px-8 py-4 border-2 border-[#FFC107] text-[#FFC107] rounded-lg font-bold text-lg hover:bg-[#FFC107] hover:text-[#1E1E1E] transition-all"
+              >
+                Get Your FreoWallet
+              </motion.button>
             </Link>
           </motion.div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.section>
 
       {/* Value Props Section */}
-      <section className="py-24 bg-neutral-medium">
+      <section className="py-24 bg-[#2A2A2A]">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-8">
             {valueProps.map((prop, index) => (
               <motion.div
                 key={prop.title}
-                className="p-8 rounded-xl bg-neutral-dark"
-                {...animations.fadeIn}
-                transition={{ delay: index * 0.2 }}
+                variants={fadeInUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="p-8 rounded-xl bg-[#1E1E1E]"
               >
                 <motion.div
                   className="text-6xl mb-4"
-                  {...animations.scaleOnHover}
+                  {...scaleOnHover}
                 >
                   {prop.emoji}
                 </motion.div>
@@ -165,18 +204,23 @@ export default function Page() {
       </section>
 
       {/* Demo Section */}
-      <section className="py-24 bg-neutral-dark">
+      <section className="py-24 bg-[#1E1E1E]">
         <div className="container mx-auto px-6 text-center">
           <motion.h2
-            className="text-4xl md:text-5xl font-bold mb-12"
-            style={{ background: gradients.textGradient, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
-            {...animations.fadeIn}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-bold mb-12 bg-clip-text text-transparent bg-gradient-to-r from-white to-[#FFC107]"
           >
             See FreoWallet in Action
           </motion.h2>
           <motion.div
-            className="relative aspect-video max-w-4xl mx-auto bg-[#1E1E1E] rounded-xl overflow-hidden"
-            {...animations.fadeIn}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="relative aspect-video max-w-4xl mx-auto bg-[#2A2A2A] rounded-xl overflow-hidden"
           >
             <div className="absolute inset-0 flex items-center justify-center">
               <p className="text-xl text-gray-400">Demo video coming soon</p>
@@ -186,7 +230,7 @@ export default function Page() {
       </section>
 
       {/* Audience Tabs Section */}
-      <section className="py-24 bg-neutral-medium">
+      <section className="py-24 bg-[#2A2A2A]">
         <div className="container mx-auto px-6">
           <div className="flex justify-center mb-12">
             {Object.keys(audienceContent).map((audience) => (
@@ -195,8 +239,8 @@ export default function Page() {
                 onClick={() => setActiveAudience(audience as keyof typeof audienceContent)}
                 className={`px-6 py-2 border-b-2 ${
                   activeAudience === audience
-                    ? 'border-accent-yellow text-accent-yellow'
-                    : 'border-transparent hover:text-accent-yellow'
+                    ? 'border-[#FFC107] text-[#FFC107]'
+                    : 'border-transparent hover:text-[#FFC107]'
                 } transition-colors`}
               >
                 {audience.charAt(0).toUpperCase() + audience.slice(1)}
@@ -205,24 +249,27 @@ export default function Page() {
           </div>
           <motion.div
             key={activeAudience}
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
             className="text-center"
-            {...animations.fadeIn}
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">{audienceContent[activeAudience].title}</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto">{audienceContent[activeAudience].description}</p>
-            <Link
-              href={audienceContent[activeAudience].buttonHref}
-              className="inline-block px-8 py-4 rounded-lg font-semibold text-white"
-              style={{ background: gradients.buttonGradient }}
-            >
-              {audienceContent[activeAudience].buttonText}
+            <Link href={audienceContent[activeAudience].buttonHref}>
+              <motion.button
+                {...scaleOnHover}
+                className="px-8 py-4 bg-gradient-to-r from-[#A7D1EB] to-[#FFD700] text-[#1E1E1E] rounded-lg font-bold text-lg"
+              >
+                {audienceContent[activeAudience].buttonText}
+              </motion.button>
             </Link>
           </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 bg-neutral-medium">
+      <footer className="py-12 bg-[#2A2A2A]">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             {['Users', 'Resources', 'Company', 'Legal'].map((section) => (
@@ -233,7 +280,7 @@ export default function Page() {
                     <li key={item}>
                       <Link
                         href="#"
-                        className="text-gray-400 hover:text-accent-yellow transition-colors"
+                        className="text-gray-400 hover:text-[#FFC107] transition-colors"
                       >
                         {section} Link {item}
                       </Link>
