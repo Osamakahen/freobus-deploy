@@ -177,7 +177,7 @@ export default function Page() {
             variants={fadeInUp}
             className="text-xl md:text-2xl mb-12 text-gray-200"
           >
-            <span className="font-bold">FreoWallet</span> Magically Empowering you to Decentralization
+            <span className="font-bold">FreoWallet</span> Magically Empowering <span className="font-bold text-[#FFC107] uppercase tracking-wider">YOU</span> to Decentralization
           </motion.p>
           <motion.div
             variants={fadeInUp}
