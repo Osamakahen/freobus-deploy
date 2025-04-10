@@ -180,7 +180,7 @@ export default function Page() {
       <section className="py-24 bg-[#2A2A2A]">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-8">
-            {valueProps.map((prop, index) => (
+            {valueProps.map((prop) => (
               <motion.div
                 key={prop.title}
                 variants={fadeInUp}
