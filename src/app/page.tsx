@@ -225,21 +225,28 @@ export default function Page() {
               viewport={{ once: true }}
               className={`p-8 rounded-xl ${
                 index % 2 === 0 ? 'bg-[#1E1E1E]' : 'bg-[#222222]'
-              }`}
+              } flex flex-col items-start`}
             >
-              <p className="text-sm text-[#FFC107] font-semibold mb-2 uppercase tracking-wider">
+              <p className="text-sm text-[#FFC107] font-semibold mb-4 uppercase tracking-wider">
                 {prop.stickyMessage}
               </p>
               <motion.div
-                className={`relative w-20 h-20 mb-4 overflow-hidden rounded-[12px] ${
-                  index === 1 || index === 3 ? 'rotate-6' : '-rotate-3'
-                }`}
+                className={`relative w-32 h-32 mb-6 overflow-hidden rounded-2xl ${
+                  index === 1 || index === 3 ? 'rotate-3' : '-rotate-3'
+                } transition-transform hover:rotate-0 duration-300`}
                 {...scaleOnHover}
               >
-                <Image src={prop.imageSrc} alt={prop.alt} layout="fill" objectFit="cover" />
+                <Image 
+                  src={prop.imageSrc} 
+                  alt={prop.alt} 
+                  fill
+                  className="object-cover p-4 bg-gradient-to-br from-[#333333] to-[#1A1A1A]"
+                  sizes="(max-width: 768px) 96px, 128px"
+                  priority={index < 2}
+                />
               </motion.div>
-              <h3 className="text-2xl font-bold mb-4">{prop.title}</h3>
-              <p className="text-gray-300">{prop.description}</p>
+              <h3 className="text-2xl font-bold mb-3 text-white">{prop.title}</h3>
+              <p className="text-gray-300 leading-relaxed">{prop.description}</p>
             </motion.div>
           ))}
         </div>
