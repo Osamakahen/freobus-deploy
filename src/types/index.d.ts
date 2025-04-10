@@ -1,7 +1,4 @@
-import { ComponentProps } from 'react'
-import type { HTMLMotionProps } from 'framer-motion'
-import { motion } from 'framer-motion'
-
+// Type declarations for the project
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -23,30 +20,19 @@ declare global {
 }
 
 declare module 'framer-motion' {
-  interface MotionProps extends HTMLMotionProps<'section'> {
-    style?: {
-      opacity?: number;
-      scale?: number;
-      backgroundColor?: string;
-      color?: string;
-    };
-  }
-
   interface MotionStyle {
-    opacity?: number | string | any;
-    scale?: number | string | any;
+    opacity?: number | string | import('framer-motion').MotionValue<number>;
+    scale?: number | string | import('framer-motion').MotionValue<number>;
     backgroundColor?: string;
     color?: string;
   }
 }
 
 declare module 'next/link' {
-  interface LinkProps {
+  interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
     href: string;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     className?: string;
-    legacyBehavior?: boolean;
-    key?: string | number;
   }
 }
 

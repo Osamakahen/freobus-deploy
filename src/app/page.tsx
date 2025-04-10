@@ -8,6 +8,10 @@ import type { Feature, CTAItem } from '@/types';
 
 const colors = {
   primary: '#6F3AFF',
+  secondary: '#4F46E5',
+  accent: '#00FF00',
+  dark: '#1F2937',
+  light: '#F3F4F6',
   hover: '#7d4fff',
   background: {
     dark: '#1E1E1E',
@@ -60,7 +64,7 @@ export default function Page() {
       <motion.section 
         className="min-h-screen flex flex-col items-center justify-center text-center p-4"
         initial={{ opacity: 1, scale: 1 }}
-        animate={{ opacity, scale }}
+        style={{ opacity, scale }}
       >
         <div className="mb-8 relative w-32 h-32">
           <Image
@@ -78,15 +82,17 @@ export default function Page() {
           The next generation digital wallet for secure, instant, and smart transactions.
         </p>
         <div className="flex gap-4">
-          <Link href="/demo" legacyBehavior>
-            <a className="px-6 py-3 text-lg font-semibold text-white bg-primary rounded-lg hover:bg-primary-dark transition-colors">
-              Try Demo
-            </a>
+          <Link 
+            href="/demo" 
+            className="px-6 py-3 text-lg font-semibold text-white bg-primary rounded-lg hover:bg-primary-dark transition-colors"
+          >
+            Try Demo
           </Link>
-          <Link href="/docs" legacyBehavior>
-            <a className="px-6 py-3 text-lg font-semibold text-gray-700 border-2 border-gray-300 rounded-lg hover:border-gray-400 transition-colors">
-              Documentation
-            </a>
+          <Link 
+            href="/docs" 
+            className="px-6 py-3 text-lg font-semibold text-gray-700 border-2 border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
+          >
+            Documentation
           </Link>
         </div>
       </motion.section>
@@ -119,11 +125,13 @@ export default function Page() {
           <h2 className="text-4xl font-bold mb-12 text-center text-white">Get Started</h2>
           <div className="grid md:grid-cols-2 gap-8">
             {ctaItems.map((item, index) => (
-              <Link key={index} href={item.href} legacyBehavior>
-                <a className="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                  <p className="text-gray-600">{item.description}</p>
-                </a>
+              <Link 
+                key={index} 
+                href={item.href}
+                className="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              >
+                <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                <p className="text-gray-600">{item.description}</p>
               </Link>
             ))}
           </div>
