@@ -1,14 +1,11 @@
 ﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  output: 'export',  // Static export for Vercel
   images: {
-    domains: ['images.unsplash.com'],
-    unoptimized: true
+    unoptimized: true,  // Required for static export
+    domains: ['images.unsplash.com']
   },
-  // Remove experimental flag as it's no longer needed
-  experimental: {
-    // Server actions are enabled by default in latest Next.js
-  }
+  // Remove experimental section as it's not needed
 }
 
 module.exports = nextConfig
