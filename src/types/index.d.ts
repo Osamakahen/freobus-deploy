@@ -28,7 +28,22 @@ declare module 'next/link' {
   interface LinkProps extends ComponentProps<'a'> {
     href: string;
     children: React.ReactNode;
+    style?: React.CSSProperties & {
+      ':hover'?: React.CSSProperties;
+    };
   }
+}
+
+export interface Feature {
+  title: string;
+  description: string;
+  icon: string;
+}
+
+export interface CTAItem {
+  title: string;
+  description: string;
+  href: string;
 }
 
 export {} 

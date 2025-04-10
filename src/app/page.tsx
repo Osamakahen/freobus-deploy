@@ -4,6 +4,7 @@ import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
+import type { Feature, CTAItem } from '@/types';
 
 const colors = {
   primary: '#6F3AFF',
@@ -16,14 +17,14 @@ const colors = {
     primary: '#111827',
     secondary: '#9CA3AF'
   }
-};
+} as const;
 
 export default function Page() {
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
 
-  const features = [
+  const features: Feature[] = [
     {
       title: 'Secure Transactions',
       description: 'End-to-end encrypted transactions ensure your money is always safe.',
@@ -41,7 +42,7 @@ export default function Page() {
     }
   ];
 
-  const ctaItems = [
+  const ctaItems: CTAItem[] = [
     {
       title: 'For Investors',
       description: 'Join FreoBus in revolutionizing digital payments.',
@@ -55,7 +56,7 @@ export default function Page() {
   ];
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen" style={{ backgroundColor: colors.background.light }}>
       <motion.section 
         className="min-h-screen flex flex-col items-center justify-center text-center p-4"
         style={{ opacity, scale }}
@@ -78,18 +79,19 @@ export default function Page() {
         <div className="flex gap-4">
           <Link 
             href="/demo" 
-            className={`px-8 py-4 text-white rounded-lg font-semibold transition-all`}
-            style={{ backgroundColor: colors.primary, ':hover': { backgroundColor: colors.hover } }}
+            className="px-8 py-4 text-white rounded-lg font-semibold transition-all"
+            style={{ backgroundColor: colors.primary }}
           >
             Try Demo
           </Link>
           <Link 
             href="/docs" 
-            className="px-8 py-4 border-2 rounded-lg font-semibold transition-all"
+            className="px-8 py-4 rounded-lg font-semibold transition-all"
             style={{ 
-              borderColor: colors.primary, 
-              color: colors.primary,
-              ':hover': { backgroundColor: `${colors.primary}10` }
+              borderColor: colors.primary,
+              borderWidth: 2,
+              borderStyle: 'solid',
+              color: colors.primary
             }}
           >
             Documentation
@@ -107,7 +109,7 @@ export default function Page() {
               <div 
                 key={index}
                 className="p-6 rounded-xl"
-                style={{ backgroundColor: colors.background.light }}
+                style={{ backgroundColor: colors.background.dark }}
               >
                 <div className="text-4xl mb-4">{feature.icon}</div>
                 <h3 className="text-xl font-semibold mb-2" style={{ color: colors.text.primary }}>
@@ -120,7 +122,7 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="py-20 px-4" style={{ backgroundColor: colors.background.light }}>
+      <section className="py-20 px-4" style={{ backgroundColor: colors.background.dark }}>
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold mb-12 text-center text-white">Get Started</h2>
           <div className="grid md:grid-cols-2 gap-8">
@@ -128,13 +130,10 @@ export default function Page() {
               <Link 
                 key={index}
                 href={item.href}
-                className="p-8 rounded-xl transition-all"
-                style={{ 
-                  backgroundColor: colors.background.dark,
-                  ':hover': { backgroundColor: '#252525' }
-                }}
+                className="p-8 rounded-xl transition-all block"
+                style={{ backgroundColor: colors.background.light }}
               >
-                <h3 className="text-2xl font-semibold mb-2 text-white">{item.title}</h3>
+                {item.title}
                 <p style={{ color: colors.text.secondary }}>{item.description}</p>
               </Link>
             ))}
