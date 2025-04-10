@@ -8,11 +8,13 @@ import Image from 'next/image';
 const colors = {
   primary: '#6F3AFF',
   hover: '#7d4fff',
-  background: '#1E1E1E',
-  text: '#ffffff',
-  gray: {
-    400: '#9CA3AF',
-    900: '#111827'
+  background: {
+    dark: '#1E1E1E',
+    light: '#2A2A2A'
+  },
+  text: {
+    primary: '#111827',
+    secondary: '#9CA3AF'
   }
 };
 
@@ -67,22 +69,28 @@ export default function Page() {
             priority
           />
         </div>
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 text-gray-900">
+        <h1 className="text-5xl md:text-7xl font-bold mb-6" style={{ color: colors.text.primary }}>
           FreoWallet
         </h1>
-        <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl">
+        <p className="text-xl md:text-2xl mb-8 max-w-2xl" style={{ color: colors.text.secondary }}>
           The next generation digital wallet for secure, instant, and smart transactions.
         </p>
         <div className="flex gap-4">
           <Link 
             href="/demo" 
-            className="px-8 py-4 bg-[#6F3AFF] text-white rounded-lg font-semibold transition-all hover:bg-[#7d4fff]"
+            className={`px-8 py-4 text-white rounded-lg font-semibold transition-all`}
+            style={{ backgroundColor: colors.primary, ':hover': { backgroundColor: colors.hover } }}
           >
             Try Demo
           </Link>
           <Link 
             href="/docs" 
-            className="px-8 py-4 border-2 border-[#6F3AFF] text-[#6F3AFF] rounded-lg font-semibold transition-all hover:bg-[#6F3AFF]/10"
+            className="px-8 py-4 border-2 rounded-lg font-semibold transition-all"
+            style={{ 
+              borderColor: colors.primary, 
+              color: colors.primary,
+              ':hover': { backgroundColor: `${colors.primary}10` }
+            }}
           >
             Documentation
           </Link>
@@ -91,43 +99,52 @@ export default function Page() {
 
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold mb-12 text-center">Features</h2>
+          <h2 className="text-4xl font-bold mb-12 text-center" style={{ color: colors.text.primary }}>
+            Features
+          </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <div 
                 key={index}
-                className="p-6 bg-[#2A2A2A] rounded-xl"
+                className="p-6 rounded-xl"
+                style={{ backgroundColor: colors.background.light }}
               >
                 <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-400">{feature.description}</p>
+                <h3 className="text-xl font-semibold mb-2" style={{ color: colors.text.primary }}>
+                  {feature.title}
+                </h3>
+                <p style={{ color: colors.text.secondary }}>{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-20 px-4 bg-[#2A2A2A]">
+      <section className="py-20 px-4" style={{ backgroundColor: colors.background.light }}>
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold mb-12 text-center">Get Started</h2>
+          <h2 className="text-4xl font-bold mb-12 text-center text-white">Get Started</h2>
           <div className="grid md:grid-cols-2 gap-8">
             {ctaItems.map((item, index) => (
               <Link 
                 key={index}
                 href={item.href}
-                className="p-8 bg-[#1E1E1E] rounded-xl transition-all hover:bg-[#252525]"
+                className="p-8 rounded-xl transition-all"
+                style={{ 
+                  backgroundColor: colors.background.dark,
+                  ':hover': { backgroundColor: '#252525' }
+                }}
               >
-                <h3 className="text-2xl font-semibold mb-2">{item.title}</h3>
-                <p className="text-gray-400">{item.description}</p>
+                <h3 className="text-2xl font-semibold mb-2 text-white">{item.title}</h3>
+                <p style={{ color: colors.text.secondary }}>{item.description}</p>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      <footer className="py-8 px-4 bg-[#1E1E1E]">
+      <footer className="py-8 px-4" style={{ backgroundColor: colors.background.dark }}>
         <div className="max-w-6xl mx-auto text-center">
-          <p className="text-gray-400">
+          <p style={{ color: colors.text.secondary }}>
             © {new Date().getFullYear()} FreoBus. All rights reserved.
           </p>
         </div>

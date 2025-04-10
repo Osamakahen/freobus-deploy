@@ -1,5 +1,4 @@
 ﻿import React from 'react';
-import Link from 'next/link';
 
 export default function NotFound(): React.ReactElement {
   return (
@@ -13,7 +12,7 @@ export default function NotFound(): React.ReactElement {
         </p>
         <a
           href="/"
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="px-6 py-3 bg-[#6F3AFF] text-white rounded-lg hover:bg-[#7d4fff] transition-colors"
         >
           Return Home
         </a>
