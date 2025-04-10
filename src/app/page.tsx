@@ -133,7 +133,7 @@ export default function Page() {
                 className="p-8 rounded-xl transition-all block"
                 style={{ backgroundColor: colors.background.light }}
               >
-                {item.title}
+                <h3 className="text-2xl font-semibold mb-2 text-white">{item.title}</h3>
                 <p style={{ color: colors.text.secondary }}>{item.description}</p>
               </Link>
             ))}
