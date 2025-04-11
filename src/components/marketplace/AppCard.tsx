@@ -26,22 +26,25 @@ const AppCard: React.FC<AppCardProps> = ({ app }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className={`relative bg-[#2A2A2A] rounded-lg p-4 border ${
-        app.featured
-          ? 'border-[#FFC107]'
+      className={`
+        relative bg-[#2A2A2A] rounded-lg p-6 border shadow-lg
+        ${app.featured
+          ? 'border-[#FFC107] shadow-[#FFC107]/10'
           : 'border-[#3A3A3A] hover:border-[#FFC107]/50'
-      } transition-colors`}
+        }
+        transition-all duration-200
+      `}
     >
       {app.featured && (
         <div className="absolute -top-2 -right-2">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#FFC107] text-[#1E1E1E]">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-[#FFC107] to-[#FFD700] text-[#1E1E1E]">
             Featured
           </span>
         </div>
       )}
 
       <div className="flex items-start space-x-4">
-        <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-[#1E1E1E] flex-shrink-0">
+        <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-[#1E1E1E] flex-shrink-0 border border-[#3A3A3A]">
           <Image
             src={app.logo}
             alt={`${app.name} logo`}
@@ -53,13 +56,13 @@ const AppCard: React.FC<AppCardProps> = ({ app }) => {
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center space-x-2">
-            <h3 className="text-lg font-semibold text-white truncate">
+            <h3 className="text-lg font-bold text-white truncate">
               {app.name}
             </h3>
             {app.isVerified && (
               <motion.span
                 whileHover={{ scale: 1.1 }}
-                className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#FFC107]/10 text-[#FFC107]"
+                className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#6495ED]/10 text-[#6495ED]"
               >
                 <svg
                   className="w-3.5 h-3.5 mr-1"
@@ -103,7 +106,7 @@ const AppCard: React.FC<AppCardProps> = ({ app }) => {
             </div>
 
             {app.easyConnect && (
-              <span className="inline-flex items-center text-xs text-[#4CAF50]">
+              <span className="inline-flex items-center text-xs text-[#8A2BE2]">
                 <svg
                   className="w-4 h-4 mr-1"
                   fill="none"
@@ -129,9 +132,9 @@ const AppCard: React.FC<AppCardProps> = ({ app }) => {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full px-4 py-2 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-semibold hover:bg-[#FFD700] transition-colors"
+            className="w-full px-4 py-3 bg-gradient-to-r from-[#FFC107] to-[#FFD700] text-[#1E1E1E] rounded-lg font-bold hover:from-[#FFD700] hover:to-[#FFE44D] transition-all shadow-lg shadow-[#FFC107]/20"
           >
-            Go to App
+            View App
           </motion.button>
         </Link>
       </div>
