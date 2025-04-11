@@ -9,11 +9,12 @@ import AppCard from '@/components/marketplace/AppCard';
 // Categories data
 const categories = [
   { id: 1, name: 'All', icon: '🌐', description: 'All applications' },
-  { id: 2, name: 'DeFi', icon: '💰', description: 'Decentralized Finance apps' },
-  { id: 3, name: 'Gaming', icon: '🎮', description: 'Web3 games and gaming platforms' },
-  { id: 4, name: 'Social', icon: '👥', description: 'Social networking apps' },
-  { id: 5, name: 'NFT', icon: '🎨', description: 'NFT marketplaces and tools' },
-  { id: 6, name: 'Tools', icon: '🛠️', description: 'Utility and development tools' },
+  { id: 2, name: 'Crypto Exchanges', icon: '💱', description: 'Buy, sell, and trade cryptocurrencies' },
+  { id: 3, name: 'DeFi', icon: '💰', description: 'Decentralized Finance apps' },
+  { id: 4, name: 'Gaming', icon: '🎮', description: 'Web3 games and gaming platforms' },
+  { id: 5, name: 'Social', icon: '👥', description: 'Social networking apps' },
+  { id: 6, name: 'NFT', icon: '🎨', description: 'NFT marketplaces and tools' },
+  { id: 7, name: 'Tools', icon: '🛠️', description: 'Utility and development tools' },
 ];
 
 // Expanded dummy apps data
@@ -122,23 +123,42 @@ export default function Web3ShoppingMallPage() {
     <div className="min-h-screen bg-[#1E1E1E] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Web3 Shopping Mall</h1>
-          <p className="text-gray-400">Discover and connect with the best Web3 applications</p>
+        <div className="relative mb-12 pb-6 border-b border-[#3A3A3A]">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-3xl"
+          >
+            <h1 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-[#FFC107]">
+              Web3 Shopping Mall
+            </h1>
+            <p className="text-xl text-gray-400 leading-relaxed">
+              Discover and connect with the best Web3 applications. From DeFi to Gaming, 
+              find everything you need in one place.
+            </p>
+          </motion.div>
+          <div className="absolute -bottom-px h-[2px] w-full bg-gradient-to-r from-[#FFC107] via-[#FFC107]/50 to-transparent" />
         </div>
 
         {/* Search Bar */}
-        <div className="mb-8">
+        <div className="mb-12">
           <SearchBar
             value={searchTerm}
             onChange={setSearchTerm}
-            placeholder="Search for apps..."
+            placeholder="Search for apps, categories, or features..."
           />
         </div>
 
         {/* Featured Apps Section */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6">Featured Apps</h2>
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold">Featured Apps</h2>
+            <motion.div
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="h-2 w-2 rounded-full bg-[#FFC107]"
+            />
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {featuredApps.map(app => (
               <AppCard key={app.id} app={app} />
@@ -147,8 +167,8 @@ export default function Web3ShoppingMallPage() {
         </section>
 
         {/* Categories Section */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6">Explore Categories</h2>
+        <section className="mb-16">
+          <h2 className="text-2xl font-bold mb-6">Explore Categories</h2>
           <CategoryGrid
             categories={categories}
             selectedCategory={selectedCategory}
@@ -159,10 +179,10 @@ export default function Web3ShoppingMallPage() {
         {/* All Apps Section */}
         <section>
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-semibold">
+            <h2 className="text-2xl font-bold">
               {selectedCategory ? `${selectedCategory} Apps` : 'All Apps'}
             </h2>
-            <span className="text-gray-400">
+            <span className="text-gray-400 bg-[#2A2A2A] px-4 py-2 rounded-full text-sm">
               {filteredApps.length} {filteredApps.length === 1 ? 'app' : 'apps'} found
             </span>
           </div>
@@ -185,8 +205,17 @@ export default function Web3ShoppingMallPage() {
               ))}
             </motion.div>
           ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-400">No apps found matching your criteria</p>
+            <div className="text-center py-12 bg-[#2A2A2A] rounded-lg">
+              <p className="text-gray-400 mb-2">No apps found matching your criteria</p>
+              <button
+                onClick={() => {
+                  setSearchTerm('');
+                  setSelectedCategory(null);
+                }}
+                className="text-[#FFC107] hover:text-[#FFD700] transition-colors"
+              >
+                Clear filters
+              </button>
             </div>
           )}
         </section>
