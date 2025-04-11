@@ -31,6 +31,7 @@ const navItems: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Discover Hub', href: '/discover' },
   { label: 'FreoWallet', href: '/wallet' },
+  { label: "What's Web3", href: '#web3' },
 ];
 
 const valueProps: ValueProp[] = [
@@ -166,6 +167,9 @@ export default function Page() {
   const [showWeb3Modal, setShowWeb3Modal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [isMockupVideoLoaded, setIsMockupVideoLoaded] = useState(false);
+  const [isWeb3VideoLoaded, setIsWeb3VideoLoaded] = useState(false);
+  const [videoError, setVideoError] = useState<string | null>(null);
   const modalVideoRef = useRef<HTMLVideoElement>(null);
   const demoVideoRef = useRef<HTMLVideoElement>(null);
   const web3VideoRef = useRef<HTMLVideoElement>(null);
@@ -173,9 +177,21 @@ export default function Page() {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
 
-  // Handle video loading
-  const handleVideoLoad = (event: React.SyntheticEvent<HTMLVideoElement>) => {
-    setIsVideoLoaded(true);
+  // Handle video loading and errors
+  const handleVideoLoad = (event: React.SyntheticEvent<HTMLVideoElement>, setLoaded: (loaded: boolean) => void) => {
+    setLoaded(true);
+    setVideoError(null);
+  };
+
+  const handleVideoError = (event: React.SyntheticEvent<HTMLVideoElement>) => {
+    setVideoError('Failed to load video. Please try again.');
+  };
+
+  // Handle Web3 nav click
+  const handleWeb3Click = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowWeb3Modal(true);
+    setActiveAudience('web3');
   };
 
   // Cleanup video resources when modal closes
@@ -620,7 +636,8 @@ export default function Page() {
                 controls
                 className="absolute inset-0 w-full h-full rounded-xl object-cover"
                 preload="metadata"
-                onLoadedData={handleVideoLoad}
+                onLoadedData={(e) => handleVideoLoad(e, setIsVideoLoaded)}
+                onError={handleVideoError}
                 aria-label="FreoBus demo video"
                 playsInline
               >
@@ -706,16 +723,28 @@ export default function Page() {
               className="relative aspect-video w-full max-w-4xl bg-[#2A2A2A] rounded-xl overflow-hidden shadow-2xl"
               onClick={e => e.stopPropagation()}
             >
+              {!isWeb3VideoLoaded && !videoError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-[#2A2A2A]">
+                  <div className="w-12 h-12 border-4 border-[#FFC107] border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              )}
+              {videoError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-[#2A2A2A] text-red-500">
+                  {videoError}
+                </div>
+              )}
               <video
                 ref={web3VideoRef}
                 controls
                 autoPlay
                 className="absolute inset-0 w-full h-full rounded-xl object-cover"
                 preload="metadata"
+                onLoadedData={(e) => handleVideoLoad(e, setIsWeb3VideoLoaded)}
+                onError={handleVideoError}
                 aria-label="Web3 explanation video"
                 playsInline
               >
-                <source src="/ferobus-concept.mp4#t=0.1" type="video/mp4" />
+                <source src="/frebus-concept.mp4#t=0.1" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
               <button
