@@ -248,20 +248,22 @@ export default function Page() {
                   >
                     What's <span className="text-[#FFC107] font-semibold">FreoBus</span>?
                   </button>
-                  <Link 
-                    href="/marketplace" 
-                    className="hover:text-[#FFC107] transition-colors px-4"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Web3 Shopping Mall
-                  </Link>
-                  <Link 
-                    href="/connect-wallet" 
-                    className="px-4 py-2 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-semibold hover:bg-[#FFD700] transition-all mx-4"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Connect Your Wallet
-                  </Link>
+                  <div onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link 
+                      href="/marketplace" 
+                      className="block hover:text-[#FFC107] transition-colors px-4"
+                    >
+                      Web3 Shopping Mall
+                    </Link>
+                  </div>
+                  <div onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link 
+                      href="/connect-wallet" 
+                      className="block px-4 py-2 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-semibold hover:bg-[#FFD700] transition-all mx-4"
+                    >
+                      Connect Your Wallet
+                    </Link>
+                  </div>
                 </div>
               </motion.div>
             )}
