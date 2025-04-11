@@ -51,7 +51,7 @@ export default function Logo({ className = '' }: LogoProps) {
           />
         </svg>
         <span className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#FFC107] to-[#FFD700] tracking-tight">
-          FreoBus
+        FreoBus
         </span>
       </Link>
     </motion.div>

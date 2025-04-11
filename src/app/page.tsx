@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import Logo from '@/components/Logo';
@@ -132,9 +132,53 @@ const pulseAnimation = {
 
 export default function Page() {
   const [activeAudience, setActiveAudience] = useState<keyof typeof audienceContent>('users');
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const modalVideoRef = useRef<HTMLVideoElement>(null);
+  const demoVideoRef = useRef<HTMLVideoElement>(null);
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
+
+  // Handle video loading
+  const handleVideoLoad = (event: React.SyntheticEvent<HTMLVideoElement>) => {
+    setIsVideoLoaded(true);
+  };
+
+  // Cleanup video resources when modal closes
+  useEffect(() => {
+    if (!showVideoModal && modalVideoRef.current) {
+      modalVideoRef.current.pause();
+      modalVideoRef.current.currentTime = 0;
+    }
+  }, [showVideoModal]);
+
+  // Handle intersection observer for demo video
+  useEffect(() => {
+    if (!demoVideoRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            demoVideoRef.current?.play();
+          } else {
+            demoVideoRef.current?.pause();
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(demoVideoRef.current);
+
+    return () => {
+      if (demoVideoRef.current) {
+        observer.unobserve(demoVideoRef.current);
+      }
+    };
+  }, []);
 
   return (
     <main className="min-h-screen bg-[#1E1E1E] text-white">
@@ -148,45 +192,155 @@ export default function Page() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Logo className="py-2" />
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-md hover:bg-[#2A2A2A] transition-colors"
+              aria-label="Toggle mobile menu"
+              aria-expanded={isMobileMenuOpen}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+              </svg>
+            </button>
             <div className="hidden md:flex items-center space-x-8">
-              <Link href="/marketplace" className="hover:text-[#FFC107] transition-colors">
+              <button 
+                onClick={() => setShowVideoModal(true)}
+                className="hover:text-[#FFC107] transition-colors"
+                aria-label="Watch FreoBus demo video"
+              >
+                What's <span className="text-[#FFC107] font-semibold">FreoBus</span>?
+              </button>
+              <Link 
+                href="/marketplace" 
+                className="hover:text-[#FFC107] transition-colors"
+                aria-label="Visit Web3 Shopping Mall"
+              >
                 Web3 Shopping Mall
-              </Link>
-              <Link href="/learn/decentralization" className="hover:text-[#FFC107] transition-colors">
-                What's Decentralization?
               </Link>
               <Link 
                 href="/connect-wallet" 
                 className="px-4 py-2 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-semibold hover:bg-[#FFD700] transition-all"
+                aria-label="Connect your wallet"
               >
                 Connect Your Wallet
               </Link>
             </div>
           </div>
+          
+          {/* Mobile menu */}
+          <AnimatePresence>
+            {isMobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="md:hidden py-4"
+              >
+                <div className="flex flex-col space-y-4">
+                  <button 
+                    onClick={() => {
+                      setShowVideoModal(true);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="hover:text-[#FFC107] transition-colors text-left px-4"
+                    aria-label="Watch FreoBus demo video"
+                  >
+                    What's <span className="text-[#FFC107] font-semibold">FreoBus</span>?
+                  </button>
+                  <Link 
+                    href="/marketplace" 
+                    className="hover:text-[#FFC107] transition-colors px-4"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Web3 Shopping Mall
+                  </Link>
+                  <Link 
+                    href="/connect-wallet" 
+                    className="px-4 py-2 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-semibold hover:bg-[#FFD700] transition-all mx-4"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Connect Your Wallet
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.nav>
 
+      {/* Video Modal */}
+      <AnimatePresence>
+        {showVideoModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowVideoModal(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative aspect-video w-full max-w-4xl bg-[#2A2A2A] rounded-xl overflow-hidden shadow-2xl"
+              onClick={e => e.stopPropagation()}
+            >
+              {!isVideoLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center bg-[#2A2A2A]">
+                  <div className="w-12 h-12 border-4 border-[#FFC107] border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              )}
+              <video
+                ref={modalVideoRef}
+                controls
+                className="absolute inset-0 w-full h-full rounded-xl object-cover"
+                preload="metadata"
+                onLoadedData={handleVideoLoad}
+                aria-label="FreoBus demo video"
+                playsInline
+              >
+                <source src="/demo.mp4#t=0.1" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <button
+                onClick={() => setShowVideoModal(false)}
+                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
+                aria-label="Close video"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Hero Section */}
-      <motion.section
+      <motion.section 
         variants={fadeInUp}
         initial="hidden"
         animate="visible"
         className="relative h-screen flex items-center justify-center px-4 md:px-8 bg-[#8FBC8F] bg-gradient-to-b from-[#8FBC8F]/90 to-[#1E1E1E]"
       >
         <div className="text-center max-w-4xl">
-          <motion.h1
+          <motion.h1 
             variants={fadeInUp}
             className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-[#FFC107]"
           >
             Unlock the World of Web3 with <span className="text-[#FFC107]">FreoBus</span>
           </motion.h1>
-          <motion.p
+          <motion.p 
             variants={fadeInUp}
             className="text-xl md:text-2xl mb-12 text-gray-200"
           >
             <span className="font-bold">FreoWallet</span> Magically Empowering <span className="font-bold text-[#FFC107] uppercase tracking-wider">YOU</span> to Decentralization
           </motion.p>
-          <motion.div
+          <motion.div 
             variants={fadeInUp}
             className="flex flex-col md:flex-row gap-6 justify-center"
           >
@@ -230,7 +384,7 @@ export default function Page() {
               <p className="text-sm text-[#FFC107] font-semibold mb-4 uppercase tracking-wider">
                 {prop.stickyMessage}
               </p>
-              <motion.div
+              <motion.div 
                 className={`relative w-32 h-32 mb-6 overflow-hidden rounded-2xl ${
                   index === 1 || index === 3 ? 'rotate-3' : '-rotate-3'
                 } transition-transform hover:rotate-0 duration-300`}
@@ -260,20 +414,58 @@ export default function Page() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-bold mb-12 bg-clip-text text-transparent bg-gradient-to-r from-white to-[#FFC107]"
+            className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-[#FFC107]"
+            id="demo-section"
           >
-            See FreoWallet in Action
+            Experience the Magic of FreoWallet
           </motion.h2>
+          <motion.p
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="text-lg text-gray-300 mb-12 max-w-2xl mx-auto"
+          >
+            See how easy it is to create your wallet and connect to the FreoBus marketplace in this short demo.
+          </motion.p>
+          <motion.div
+            id="demoVideoContainer"
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="relative aspect-video max-w-4xl mx-auto bg-[#2A2A2A] rounded-xl overflow-hidden shadow-2xl"
+          >
+            <video
+              ref={demoVideoRef}
+              muted
+              loop
+              playsInline
+              poster="/demo-poster.png"
+              className="absolute inset-0 w-full h-full rounded-xl object-cover"
+              preload="metadata"
+              aria-label="FreoWallet features demo"
+            >
+              <source src="/demo.mp4#t=0.1" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </motion.div>
           <motion.div
             variants={fadeInUp}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="relative aspect-video max-w-4xl mx-auto bg-[#2A2A2A] rounded-xl overflow-hidden"
+            className="mt-12"
           >
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-xl text-gray-400">Demo video coming soon</p>
-            </div>
+            <Link href="/wallet/create" className="inline-block">
+              <motion.button
+                {...scaleOnHover}
+                className="px-8 py-4 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-bold text-lg hover:bg-[#FFD700] transition-colors duration-300 shadow-lg"
+                aria-label="Create your FreoWallet"
+              >
+                Get Your FreoWallet Now
+              </motion.button>
+            </Link>
           </motion.div>
         </div>
       </section>
@@ -296,7 +488,7 @@ export default function Page() {
               </button>
             ))}
           </div>
-          <motion.div
+          <motion.div 
             key={activeAudience}
             variants={fadeInUp}
             initial="hidden"
@@ -306,13 +498,13 @@ export default function Page() {
             <h2 className="text-4xl md:text-5xl font-bold mb-6">{audienceContent[activeAudience].title}</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto">{audienceContent[activeAudience].description}</p>
             <Link href={audienceContent[activeAudience].buttonHref}>
-              <motion.button
+                  <motion.button
                 {...scaleOnHover}
                 className="px-8 py-4 bg-gradient-to-r from-[#A7D1EB] to-[#FFD700] text-[#1E1E1E] rounded-lg font-bold text-lg"
               >
                 {audienceContent[activeAudience].buttonText}
-              </motion.button>
-            </Link>
+                  </motion.button>
+                </Link>
           </motion.div>
         </div>
       </section>
@@ -324,7 +516,7 @@ export default function Page() {
             {['Users', 'Resources', 'Company', 'Legal'].map((section) => (
               <div key={section}>
                 <h3 className="font-bold mb-4">{section}</h3>
-                <ul className="space-y-2">
+            <ul className="space-y-2">
                   {[1, 2, 3].map((item) => (
                     <li key={item}>
                       <Link
@@ -335,13 +527,13 @@ export default function Page() {
                       </Link>
                     </li>
                   ))}
-                </ul>
+            </ul>
               </div>
             ))}
           </div>
           <div className="text-center text-gray-400">
             <p>© {new Date().getFullYear()} FreoBus. All rights reserved.</p>
-          </div>
+            </div>
         </div>
       </footer>
     </main>
