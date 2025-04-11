@@ -31,6 +31,7 @@ const navItems: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Discover Hub', href: '/discover' },
   { label: 'FreoWallet', href: '/wallet' },
+  { label: "What's FreoBus", href: '#freobus' },
   { label: "What's Web3", href: '#web3' },
 ];
 
@@ -165,33 +166,31 @@ export default function Page() {
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [showMockupModal, setShowMockupModal] = useState(false);
   const [showWeb3Modal, setShowWeb3Modal] = useState(false);
+  const [showFreoBusModal, setShowFreoBusModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isMockupVideoLoaded, setIsMockupVideoLoaded] = useState(false);
   const [isWeb3VideoLoaded, setIsWeb3VideoLoaded] = useState(false);
+  const [isFreoBusVideoLoaded, setIsFreoBusVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState<string | null>(null);
+  
   const modalVideoRef = useRef<HTMLVideoElement>(null);
   const demoVideoRef = useRef<HTMLVideoElement>(null);
   const web3VideoRef = useRef<HTMLVideoElement>(null);
+  const freoBusVideoRef = useRef<HTMLVideoElement>(null);
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
 
-  // Handle video loading and errors
-  const handleVideoLoad = (event: React.SyntheticEvent<HTMLVideoElement>, setLoaded: (loaded: boolean) => void) => {
-    setLoaded(true);
-    setVideoError(null);
+  // Handle video loading
+  const handleVideoLoad = (event: React.SyntheticEvent<HTMLVideoElement>) => {
+    setIsVideoLoaded(true);
   };
 
-  const handleVideoError = (event: React.SyntheticEvent<HTMLVideoElement>) => {
-    setVideoError('Failed to load video. Please try again.');
-  };
-
-  // Handle Web3 nav click
-  const handleWeb3Click = (e: React.MouseEvent) => {
+  // Handle FreoBus nav click
+  const handleFreoBusClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    setShowWeb3Modal(true);
-    setActiveAudience('web3');
+    setShowFreoBusModal(true);
   };
 
   // Cleanup video resources when modal closes
@@ -227,6 +226,12 @@ export default function Page() {
       }
     };
   }, []);
+
+  // Handle video error
+  const handleVideoError = (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+    event.preventDefault();
+    setVideoError("An error occurred while loading the video.");
+  };
 
   return (
     <main className="min-h-screen bg-[#1E1E1E] text-white">
@@ -320,7 +325,12 @@ export default function Page() {
       </motion.nav>
 
       {/* Hero Section */}
-      <section className="min-h-screen relative flex items-center justify-center">
+      <motion.section
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+        className="relative h-screen flex items-center justify-center px-4 md:px-8 bg-[#8FBC8F] bg-gradient-to-b from-[#98FB98]/90 to-[#1E1E1E]"
+      >
         <div className="text-center max-w-4xl">
           <motion.h1 
             variants={fadeInUp}
@@ -354,7 +364,7 @@ export default function Page() {
             </motion.button>
           </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Value Props Section */}
       <motion.section 
@@ -636,8 +646,7 @@ export default function Page() {
                 controls
                 className="absolute inset-0 w-full h-full rounded-xl object-cover"
                 preload="metadata"
-                onLoadedData={(e) => handleVideoLoad(e, setIsVideoLoaded)}
-                onError={handleVideoError}
+                onLoadedData={handleVideoLoad}
                 aria-label="FreoBus demo video"
                 playsInline
               >
@@ -723,24 +732,12 @@ export default function Page() {
               className="relative aspect-video w-full max-w-4xl bg-[#2A2A2A] rounded-xl overflow-hidden shadow-2xl"
               onClick={e => e.stopPropagation()}
             >
-              {!isWeb3VideoLoaded && !videoError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-[#2A2A2A]">
-                  <div className="w-12 h-12 border-4 border-[#FFC107] border-t-transparent rounded-full animate-spin"></div>
-                </div>
-              )}
-              {videoError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-[#2A2A2A] text-red-500">
-                  {videoError}
-                </div>
-              )}
               <video
                 ref={web3VideoRef}
                 controls
                 autoPlay
                 className="absolute inset-0 w-full h-full rounded-xl object-cover"
                 preload="metadata"
-                onLoadedData={(e) => handleVideoLoad(e, setIsWeb3VideoLoaded)}
-                onError={handleVideoError}
                 aria-label="Web3 explanation video"
                 playsInline
               >
@@ -751,6 +748,64 @@ export default function Page() {
                 onClick={() => setShowWeb3Modal(false)}
                 className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
                 aria-label="Close Web3 video"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Add FreoBus Video Modal */}
+      <AnimatePresence>
+        {showFreoBusModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowFreoBusModal(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="freobus-modal-title"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative aspect-video w-full max-w-4xl bg-[#2A2A2A] rounded-xl overflow-hidden shadow-2xl"
+              onClick={e => e.stopPropagation()}
+            >
+              {!isFreoBusVideoLoaded && !videoError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-[#2A2A2A]">
+                  <div className="w-12 h-12 border-4 border-[#FFC107] border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              )}
+              {videoError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-[#2A2A2A] text-red-500">
+                  {videoError}
+                </div>
+              )}
+              <video
+                ref={freoBusVideoRef}
+                controls
+                autoPlay
+                className="absolute inset-0 w-full h-full rounded-xl object-cover"
+                preload="metadata"
+                onLoadedData={(e) => handleVideoLoad(e)}
+                onError={handleVideoError}
+                aria-label="FreoBus concept video"
+                playsInline
+              >
+                <source src="/freobus-concept.mp4#t=0.1" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <button
+                onClick={() => setShowFreoBusModal(false)}
+                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
+                aria-label="Close FreoBus video"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
