@@ -715,7 +715,7 @@ export default function Page() {
                 aria-label="Web3 explanation video"
                 playsInline
               >
-                <source src="/demo.mp4#t=0.1" type="video/mp4" />
+                <source src="/ferobus-concept.mp4#t=0.1" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
               <button
