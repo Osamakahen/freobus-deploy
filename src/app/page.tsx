@@ -233,88 +233,108 @@ export default function Page() {
         variants={navVariants}
         initial="hidden"
         animate="visible"
-        className="fixed w-full top-0 z-50 bg-[#1E1E1E]/80 backdrop-blur-sm"
+        className="fixed w-full top-0 z-50 bg-[#1E1E1E]/80 backdrop-blur-sm border-b border-[#3A3A3A]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
+            {/* Logo and Nav Items */}
             <div className="flex items-center">
-              <Logo className="py-2" />
-            </div>
-            
-            <div className="hidden md:flex items-center space-x-6">
-              <button
-                onClick={handleFreoBusClick}
-                className="text-[#FFC107] hover:text-[#FFD700] transition-colors text-sm font-bold"
-              >
-                What's FreoBus
-              </button>
-              <Link
-                href="/marketplace"
-                className="text-gray-300 hover:text-[#FFC107] transition-colors text-sm font-medium"
-              >
-                Web3 Shopping Mall
+              <Link href="/" className="flex-shrink-0">
+                <Logo className="h-8 w-auto" />
               </Link>
-              <Link 
-                href="/connect-wallet" 
-                className="px-4 py-2 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-semibold hover:bg-[#FFD700] transition-all"
-              >
-                Connect Your Wallet
-              </Link>
+              
+              {/* Desktop Navigation */}
+              <div className="hidden md:flex items-center space-x-8 ml-10">
+                {navItems.map((item) => (
+                  item.href.startsWith('#') ? (
+                    <button
+                      key={item.label}
+                      onClick={() => {
+                        if (item.label === "What's FreoBus") {
+                          setShowFreoBusModal(true);
+                        } else if (item.label === "What's Web3") {
+                          setShowWeb3Modal(true);
+                        }
+                      }}
+                      className="text-gray-300 hover:text-[#FFC107] transition-colors text-sm font-medium"
+                    >
+                      {item.label}
+                    </button>
+                  ) : (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className="text-gray-300 hover:text-[#FFC107] transition-colors text-sm font-medium"
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                ))}
+              </div>
             </div>
 
             {/* Mobile menu button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-md hover:bg-[#2A2A2A] transition-colors"
-              aria-label="Toggle mobile menu"
-              aria-expanded={isMobileMenuOpen}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-              </svg>
-            </button>
-          </div>
-          
-          {/* Mobile menu */}
-          <AnimatePresence>
-            {isMobileMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="md:hidden py-4"
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-[#2A2A2A] focus:outline-none"
               >
-                <div className="flex flex-col space-y-4">
-                  <button
-                    onClick={(e) => {
-                      handleFreoBusClick(e);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="block text-left text-[#FFC107] hover:text-[#FFD700] transition-colors px-4 text-sm font-bold"
-                  >
-                    What's FreoBus
-                  </button>
-                  <Link
-                    href="/marketplace"
-                    className="block hover:text-[#FFC107] transition-colors px-4 text-sm font-medium"
-                  >
-                    <span onClick={() => setIsMobileMenuOpen(false)}>
-                      Web3 Shopping Mall
-                    </span>
-                  </Link>
-                  <div className="px-4">
-                    <Link 
-                      href="/connect-wallet" 
-                      className="block w-full px-4 py-2 bg-[#FFC107] text-center text-[#1E1E1E] rounded-lg font-semibold hover:bg-[#FFD700] transition-all"
-                    >
-                      Connect Your Wallet
-                    </Link>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                <span className="sr-only">Open main menu</span>
+                {isMobileMenuOpen ? (
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
+
+        {/* Mobile menu */}
+        <motion.div
+          initial={false}
+          animate={isMobileMenuOpen ? "open" : "closed"}
+          variants={{
+            open: { opacity: 1, height: "auto" },
+            closed: { opacity: 0, height: 0 }
+          }}
+          className="md:hidden overflow-hidden bg-[#1E1E1E]"
+        >
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {navItems.map((item) => (
+              item.href.startsWith('#') ? (
+                <button
+                  key={item.label}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    if (item.label === "What's FreoBus") {
+                      setShowFreoBusModal(true);
+                    } else if (item.label === "What's Web3") {
+                      setShowWeb3Modal(true);
+                    }
+                  }}
+                  className="block w-full text-left px-3 py-2 text-base font-medium text-gray-300 hover:text-[#FFC107] hover:bg-[#2A2A2A] rounded-md"
+                >
+                  {item.label}
+                </button>
+              ) : (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-[#FFC107] hover:bg-[#2A2A2A] rounded-md"
+                >
+                  <span onClick={() => setIsMobileMenuOpen(false)}>
+                    {item.label}
+                  </span>
+                </Link>
+              )
+            ))}
+          </div>
+        </motion.div>
       </motion.nav>
 
       {/* Hero Section */}
