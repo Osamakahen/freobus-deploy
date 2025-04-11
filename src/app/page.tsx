@@ -87,12 +87,41 @@ const audienceContent: Record<string, AudienceContent> = {
 
 // Animation variants
 const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { 
+    opacity: 0, 
+    y: 40,
+    transition: {
+      type: "spring",
+      damping: 25,
+      stiffness: 100
+    }
+  },
   visible: { 
     opacity: 1, 
     y: 0,
     transition: {
-      duration: 0.5
+      type: "spring",
+      damping: 25,
+      stiffness: 100,
+      duration: 0.8
+    }
+  }
+};
+
+const sectionVariants = {
+  hidden: {
+    opacity: 0,
+    y: 60
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      damping: 25,
+      stiffness: 100,
+      duration: 0.8,
+      staggerChildren: 0.2
     }
   }
 };
@@ -310,15 +339,18 @@ export default function Page() {
       </section>
 
       {/* Value Props Section */}
-      <section className="py-24 bg-[#2A2A2A]">
+      <motion.section 
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="py-24 bg-[#2A2A2A]"
+      >
         <div className="container mx-auto px-6 grid md:grid-cols-4 gap-8">
           {valueProps.map((prop, index) => (
             <motion.div
               key={prop.title}
               variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
               className={`p-8 rounded-xl ${
                 index % 2 === 0 ? 'bg-[#1E1E1E]' : 'bg-[#222222]'
               } flex flex-col items-start`}
@@ -346,16 +378,19 @@ export default function Page() {
             </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* Demo Section */}
-      <section className="py-24 bg-[#1E1E1E]">
+      <motion.section 
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="py-24 bg-[#1E1E1E]"
+      >
         <div className="container mx-auto px-6 text-center">
           <motion.h2
             variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
             className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-[#FFC107]"
             id="demo-section"
           >
@@ -363,9 +398,6 @@ export default function Page() {
           </motion.h2>
           <motion.p
             variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
             className="text-lg text-gray-300 mb-12 max-w-2xl mx-auto"
           >
             See how easy it is to create your wallet and connect to the FreoBus marketplace in this short demo.
@@ -373,9 +405,6 @@ export default function Page() {
           <motion.div
             id="demoVideoContainer"
             variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
             className="relative aspect-video max-w-4xl mx-auto bg-[#2A2A2A] rounded-xl overflow-hidden shadow-2xl"
           >
             <video
@@ -394,9 +423,6 @@ export default function Page() {
           </motion.div>
           <motion.div
             variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
             className="mt-12"
           >
             <button
@@ -408,51 +434,115 @@ export default function Page() {
             </button>
           </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Audience Tabs Section */}
-      <section className="py-24 bg-[#2A2A2A]">
+      <motion.section 
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="py-24 bg-[#2A2A2A]"
+      >
         <div className="container mx-auto px-6">
-          <div className="flex justify-center mb-12">
-            {Object.keys(audienceContent).map((audience) => (
-              <button
-                key={audience}
-                onClick={() => setActiveAudience(audience as keyof typeof audienceContent)}
-                className={`px-6 py-2 border-b-2 ${
-                  activeAudience === audience
-                    ? 'border-[#FFC107] text-[#FFC107]'
-                    : 'border-transparent hover:text-[#FFC107]'
-                } transition-colors`}
-              >
-                {audience.charAt(0).toUpperCase() + audience.slice(1)}
-              </button>
-            ))}
+          <div className="flex justify-center mb-12 relative">
+            <div className="inline-flex bg-[#1E1E1E] rounded-lg p-1 relative">
+              {Object.keys(audienceContent).map((audience) => (
+                <motion.button
+                  key={audience}
+                  onClick={() => setActiveAudience(audience as keyof typeof audienceContent)}
+                  className={`
+                    relative px-8 py-3 rounded-md text-sm font-medium
+                    ${activeAudience === audience
+                      ? 'text-[#1E1E1E]'
+                      : 'text-gray-300 hover:text-[#FFC107]'
+                    }
+                    transition-all duration-300 ease-in-out
+                  `}
+                >
+                  {activeAudience === audience && (
+                    <motion.div
+                      layoutId="activeTabBackground"
+                      className="absolute inset-0 bg-[#FFC107] rounded-md"
+                      initial={false}
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  <span className="relative z-10">
+                    {audience.charAt(0).toUpperCase() + audience.slice(1)}
+                  </span>
+                  {activeAudience === audience && (
+                    <motion.div
+                      layoutId="activeTabLine"
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#FFC107]"
+                      initial={false}
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                </motion.button>
+              ))}
+            </div>
           </div>
           <motion.div 
             key={activeAudience}
             variants={fadeInUp}
-            initial="hidden"
-            animate="visible"
-            className="text-center"
+            className="text-center max-w-4xl mx-auto"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">{audienceContent[activeAudience].title}</h2>
-            <p className="text-xl mb-8 max-w-2xl mx-auto">{audienceContent[activeAudience].description}</p>
-            <Link href={audienceContent[activeAudience].buttonHref}>
-                  <motion.button
-                {...scaleOnHover}
-                className="px-8 py-4 bg-gradient-to-r from-[#A7D1EB] to-[#FFD700] text-[#1E1E1E] rounded-lg font-bold text-lg"
-              >
-                {audienceContent[activeAudience].buttonText}
-                  </motion.button>
-                </Link>
+            <motion.h2 
+              className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-[#FFC107]"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              {audienceContent[activeAudience].title}
+            </motion.h2>
+            <motion.p 
+              className="text-xl mb-8 text-gray-300"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              {audienceContent[activeAudience].description}
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <Link href={audienceContent[activeAudience].buttonHref}>
+                <motion.button
+                  {...scaleOnHover}
+                  className="px-8 py-4 bg-gradient-to-r from-[#FFC107] to-[#FFD700] text-[#1E1E1E] rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  {audienceContent[activeAudience].buttonText}
+                  <motion.span 
+                    className="inline-block ml-2"
+                    initial={{ x: 0 }}
+                    whileHover={{ x: 5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    →
+                  </motion.span>
+                </motion.button>
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Footer */}
-      <footer className="py-12 bg-[#2A2A2A]">
+      <motion.footer 
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="py-12 bg-[#2A2A2A]"
+      >
         <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-8 mb-12">
+          <motion.div 
+            variants={fadeInUp}
+            className="grid md:grid-cols-4 gap-8 mb-12"
+          >
             {['Users', 'Resources', 'Company', 'Legal'].map((section) => (
               <div key={section}>
                 <h3 className="font-bold mb-4">{section}</h3>
@@ -470,12 +560,15 @@ export default function Page() {
             </ul>
               </div>
             ))}
-          </div>
-          <div className="text-center text-gray-400">
+          </motion.div>
+          <motion.div 
+            variants={fadeInUp}
+            className="text-center text-gray-400"
+          >
             <p>© {new Date().getFullYear()} FreoBus. All rights reserved.</p>
-            </div>
+          </motion.div>
         </div>
-      </footer>
+      </motion.footer>
 
       {/* FreoBus Demo Video Modal */}
       <AnimatePresence>
