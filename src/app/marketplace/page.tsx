@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SearchBar from '@/components/marketplace/SearchBar';
 import CategoryGrid from '@/components/marketplace/CategoryGrid';
 import AppCard from '@/components/marketplace/AppCard';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface App {
   id: string;
@@ -69,27 +70,57 @@ const categories: Category[] = [
 
 type SortOption = 'rating' | 'featured' | 'newest';
 
-export default function Web3ShoppingMallPage() {
+export default function Marketplace() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [showHelp, setShowHelp] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Simulate loading state
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredApps = useMemo(() => {
     let filtered = [...dummyApps];
 
     // Apply category filter
     if (selectedCategory) {
-      filtered = filtered.filter(app => app.category.toLowerCase() === selectedCategory.toLowerCase());
+      filtered = filtered.filter(app => 
+        app.category.toLowerCase() === selectedCategory.toLowerCase()
+      );
     }
 
-    // Apply search filter
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(app =>
-        app.name.toLowerCase().includes(query) ||
-        app.description.toLowerCase().includes(query)
-      );
+    // Apply search filter with improved relevance scoring
+    if (debouncedSearch) {
+      const searchTerms = debouncedSearch.toLowerCase().split(' ');
+      filtered = filtered.filter(app => {
+        const nameMatch = searchTerms.every(term =>
+          app.name.toLowerCase().includes(term)
+        );
+        const descMatch = searchTerms.every(term =>
+          app.description.toLowerCase().includes(term)
+        );
+        const categoryMatch = searchTerms.every(term =>
+          app.category.toLowerCase().includes(term)
+        );
+        return nameMatch || descMatch || categoryMatch;
+      });
     }
 
     // Apply sorting
@@ -98,59 +129,82 @@ export default function Web3ShoppingMallPage() {
         filtered.sort((a, b) => b.rating - a.rating);
         break;
       case 'newest':
-        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        filtered.sort((a, b) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
         break;
       case 'featured':
-        filtered.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+        filtered.sort((a, b) => {
+          if (a.featured === b.featured) {
+            return b.rating - a.rating;
+          }
+          return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
+        });
         break;
     }
 
     return filtered;
-  }, [dummyApps, selectedCategory, searchQuery, sortBy]);
+  }, [dummyApps, selectedCategory, debouncedSearch, sortBy]);
+
+  // Featured apps for the carousel
+  const featuredApps = useMemo(() => {
+    return dummyApps.filter(app => app.featured);
+  }, [dummyApps]);
 
   return (
-    <div className="min-h-screen bg-[#1E1E1E] text-white">
-      {/* Add top padding to account for fixed navigation */}
-      <div className="pt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Header Section */}
-          <div className="relative mb-12 pb-6 border-b border-[#3A3A3A]">
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="max-w-3xl"
+    <main className="min-h-screen bg-[#1E1E1E] text-white pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24">
+        <div className="flex flex-col space-y-8">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
+            <div>
+              <h1 className="text-4xl font-bold">Web3 Shopping Mall</h1>
+              <p className="mt-2 text-gray-400">Discover and connect with the best Web3 applications</p>
+            </div>
+            <button
+              onClick={() => setShowHelp(true)}
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-[#2A2A2A] hover:bg-[#3A3A3A] transition-colors"
             >
-              <div className="flex items-center space-x-2 mb-4">
-                <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-[#FFC107]">
-                  Web3 Shopping Mall
-                </h1>
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="h-2 w-2 rounded-full bg-[#FFC107]"
-                />
-              </div>
-              <p className="text-xl text-gray-400 leading-relaxed">
-                Discover and connect with the best Web3 applications. From DeFi to Gaming, 
-                find everything you need in one place.
-              </p>
-            </motion.div>
-            <div className="absolute -bottom-px h-[2px] w-full bg-gradient-to-r from-[#FFC107] via-[#FFC107]/50 to-transparent" />
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              New to Web3?
+            </button>
           </div>
 
-          {/* Search Bar */}
+          {/* Featured Apps Carousel */}
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(3)].map((_, i) => (
+                <Skeleton key={i} className="h-[200px] rounded-xl bg-[#2A2A2A]" />
+              ))}
+            </div>
+          ) : featuredApps.length > 0 && (
+            <div className="relative">
+              <h2 className="text-2xl font-semibold mb-4">Featured Apps</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {featuredApps.map(app => (
+                  <AppCard key={app.id} app={app} featured />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Search and Sort */}
           <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
             <div className="flex-1">
               <SearchBar
                 value={searchQuery}
                 onChange={setSearchQuery}
-                placeholder="Search for apps, categories, or features..."
+                placeholder="Search by name, category, or description..."
+                isLoading={isLoading}
               />
             </div>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
               className="px-4 py-2 bg-[#2A2A2A] rounded-lg border border-[#3A3A3A] text-gray-300 focus:outline-none focus:border-[#FFC107]"
+              disabled={isLoading}
             >
               <option value="featured">Featured First</option>
               <option value="rating">Highest Rated</option>
@@ -158,77 +212,75 @@ export default function Web3ShoppingMallPage() {
             </select>
           </div>
 
-          {/* Featured Apps Section */}
-          <section className="mb-16">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold">Featured Apps</h2>
-              <motion.div
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="h-2 w-2 rounded-full bg-[#FFC107]"
-              />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredApps.filter(app => app.featured).map(app => (
-                <AppCard key={app.id} app={app} />
+          {/* Categories */}
+          {isLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {[...Array(6)].map((_, i) => (
+                <Skeleton key={i} className="h-[100px] rounded-xl bg-[#2A2A2A]" />
               ))}
             </div>
-          </section>
-
-          {/* Categories Section */}
-          <section className="mb-16">
-            <h2 className="text-2xl font-bold mb-6">Explore Categories</h2>
+          ) : (
             <CategoryGrid
               categories={categories}
               selectedCategory={selectedCategory}
               onSelectCategory={setSelectedCategory}
             />
-          </section>
+          )}
 
-          {/* All Apps Section */}
-          <section>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">
-                {selectedCategory ? `${selectedCategory} Apps` : 'All Apps'}
-              </h2>
-              <span className="text-gray-400 bg-[#2A2A2A] px-4 py-2 rounded-full text-sm">
-                {filteredApps.length} {filteredApps.length === 1 ? 'app' : 'apps'} found
-              </span>
+          {/* App Grid */}
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <Skeleton key={i} className="h-[200px] rounded-xl bg-[#2A2A2A]" />
+              ))}
             </div>
-            
-            {filteredApps.length > 0 ? (
-              <motion.div
-                layout
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          ) : filteredApps.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredApps.map(app => (
+                <AppCard key={app.id} app={app} />
+              ))}
+            </div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex flex-col items-center justify-center py-16 text-center"
+            >
+              <svg
+                className="w-16 h-16 text-gray-600 mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                {filteredApps.map(app => (
-                  <motion.div
-                    key={app.id}
-                    layout
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <AppCard app={app} />
-                  </motion.div>
-                ))}
-              </motion.div>
-            ) : (
-              <div className="text-center py-12 bg-[#2A2A2A] rounded-lg">
-                <p className="text-gray-400 mb-2">No apps found matching your criteria</p>
-                <button
-                  onClick={() => {
-                    setSearchQuery('');
-                    setSelectedCategory(null);
-                    setSortBy('featured');
-                  }}
-                  className="text-[#FFC107] hover:text-[#FFD700] transition-colors"
-                >
-                  Reset Filters
-                </button>
-              </div>
-            )}
-          </section>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+              <h3 className="text-xl font-semibold text-gray-400">No apps found</h3>
+              <p className="mt-2 text-gray-500 max-w-md">
+                {selectedCategory
+                  ? `No apps found in the "${selectedCategory}" category${
+                      searchQuery ? ` matching "${searchQuery}"` : ''
+                    }`
+                  : searchQuery
+                  ? `No apps found matching "${searchQuery}"`
+                  : 'No apps available at the moment'}
+              </p>
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedCategory(null);
+                  setSortBy('featured');
+                }}
+                className="mt-4 px-4 py-2 bg-[#2A2A2A] text-[#FFC107] rounded-lg hover:bg-[#3A3A3A] transition-colors"
+              >
+                Reset Filters
+              </button>
+            </motion.div>
+          )}
         </div>
       </div>
 
@@ -248,8 +300,11 @@ export default function Web3ShoppingMallPage() {
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
               className="bg-[#2A2A2A] rounded-xl p-6 max-w-lg w-full"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="help-modal-title"
             >
-              <h2 className="text-2xl font-bold mb-4">Welcome to Web3! 🚀</h2>
+              <h2 id="help-modal-title" className="text-2xl font-bold mb-4">Welcome to Web3! 🚀</h2>
               <div className="space-y-4 text-gray-300">
                 <p><strong>What is Web3?</strong><br />Web3 is the next generation of the internet, where users own their data and digital assets.</p>
                 <p><strong>What is a dApp?</strong><br />A dApp (decentralized application) is an application that runs on a blockchain network.</p>
@@ -265,6 +320,6 @@ export default function Web3ShoppingMallPage() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </main>
   );
 } 

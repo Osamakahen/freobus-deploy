@@ -15,10 +15,12 @@ interface AppCardProps {
     rating: number;
     easyConnect: boolean;
     url: string;
+    featured?: boolean;
   };
+  featured?: boolean;
 }
 
-const AppCard: React.FC<AppCardProps> = ({ app }) => {
+export default function AppCard({ app, featured }: AppCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -26,8 +28,13 @@ const AppCard: React.FC<AppCardProps> = ({ app }) => {
       whileHover={{ scale: 1.02 }}
       className={`relative bg-[#2A2A2A] rounded-xl p-4 shadow-lg border ${
         app.isVerified ? 'border-[#FFC107]/20' : 'border-gray-800'
-      }`}
+      } ${featured ? 'ring-2 ring-[#FFC107]' : ''}`}
     >
+      {featured && (
+        <div className="absolute -top-2 -right-2 bg-[#FFC107] text-[#1E1E1E] px-2 py-1 rounded-full text-xs font-medium">
+          Featured
+        </div>
+      )}
       <div className="flex items-start space-x-4">
         <div className="relative w-16 h-16">
           <Image
@@ -76,6 +83,4 @@ const AppCard: React.FC<AppCardProps> = ({ app }) => {
       </div>
     </motion.div>
   );
-};
-
-export default AppCard; 
+} 

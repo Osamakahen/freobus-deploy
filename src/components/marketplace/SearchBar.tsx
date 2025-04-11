@@ -5,9 +5,15 @@ interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  isLoading?: boolean;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ value, onChange, placeholder = 'Search...' }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+  value,
+  onChange,
+  placeholder = 'Search...',
+  isLoading = false,
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -21,23 +27,46 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, onChange, placeholder = 'S
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className="w-full px-4 py-4 pl-12 bg-[#1E1E1E] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FFC107]/30 transition-all"
+          disabled={isLoading}
         />
-        {/* Search Icon */}
-        <svg
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#FFC107]"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
+        {/* Search Icon or Loading Spinner */}
+        {isLoading ? (
+          <motion.div
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+          >
+            <svg
+              className="w-5 h-5 text-[#FFC107]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+          </motion.div>
+        ) : (
+          <svg
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#FFC107]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        )}
         {/* Clear Button */}
-        {value && (
+        {value && !isLoading && (
           <button
             onClick={() => onChange('')}
             className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors focus:outline-none focus:text-[#FFC107]"
