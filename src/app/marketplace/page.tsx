@@ -1,123 +1,112 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import SearchBar from '@/components/marketplace/SearchBar';
 import CategoryGrid from '@/components/marketplace/CategoryGrid';
 import AppCard from '@/components/marketplace/AppCard';
 
-// Categories data
-const categories = [
-  { id: 1, name: 'All', icon: '🌐', description: 'All applications' },
-  { id: 2, name: 'Crypto Exchanges', icon: '💱', description: 'Buy, sell, and trade cryptocurrencies' },
-  { id: 3, name: 'DeFi', icon: '💰', description: 'Decentralized Finance apps' },
-  { id: 4, name: 'Gaming', icon: '🎮', description: 'Web3 games and gaming platforms' },
-  { id: 5, name: 'Social', icon: '👥', description: 'Social networking apps' },
-  { id: 6, name: 'NFT', icon: '🎨', description: 'NFT marketplaces and tools' },
-  { id: 7, name: 'Tools', icon: '🛠️', description: 'Utility and development tools' },
-];
+interface App {
+  id: string;
+  name: string;
+  description: string;
+  logo: string;
+  category: string;
+  isVerified: boolean;
+  rating: number;
+  easyConnect: boolean;
+  url: string;
+  featured?: boolean;
+  createdAt: string;
+}
 
-// Expanded dummy apps data
-const dummyApps = [
+// Dummy apps data
+const dummyApps: App[] = [
   {
-    id: 1,
-    name: 'DeFi Swap',
-    description: 'Decentralized exchange with the best rates and lowest fees',
+    id: '1',
+    name: 'CryptoSwap',
+    description: 'Instant token swaps with the best rates',
     logo: '/placeholder-logo.svg',
-    category: 'DeFi',
-    isVerified: true,
-    rating: 4.8,
-    easyConnect: true,
-    url: '/apps/defi-swap',
-    featured: true
-  },
-  {
-    id: 2,
-    name: 'NFT Marketplace',
-    description: 'Buy, sell, and trade unique digital collectibles',
-    logo: '/placeholder-logo.svg',
-    category: 'NFT',
+    category: 'exchange',
     isVerified: true,
     rating: 4.5,
     easyConnect: true,
-    url: '/apps/nft-marketplace',
-    featured: true
+    url: '/apps/cryptoswap',
+    featured: true,
+    createdAt: '2024-03-15'
   },
   {
-    id: 3,
-    name: 'Crypto Quest',
-    description: 'Play-to-earn RPG with blockchain integration',
+    id: '2',
+    name: 'NFT Marketplace',
+    description: 'Buy and sell unique digital assets',
     logo: '/placeholder-logo.svg',
-    category: 'Gaming',
-    isVerified: false,
-    rating: 4.2,
-    easyConnect: true,
-    url: '/apps/crypto-quest',
-    featured: false
-  },
-  // Add more dummy apps here...
-  {
-    id: 4,
-    name: 'Web3 Social',
-    description: 'Decentralized social networking platform',
-    logo: '/placeholder-logo.svg',
-    category: 'Social',
+    category: 'marketplace',
     isVerified: true,
-    rating: 4.6,
-    easyConnect: true,
-    url: '/apps/web3-social',
-    featured: true
-  },
-  {
-    id: 5,
-    name: 'Smart Contract Builder',
-    description: 'Visual tool for creating and deploying smart contracts',
-    logo: '/placeholder-logo.svg',
-    category: 'Tools',
-    isVerified: true,
-    rating: 4.7,
+    rating: 4.8,
     easyConnect: false,
-    url: '/apps/contract-builder',
-    featured: false
+    url: '/apps/nft-marketplace',
+    featured: true,
+    createdAt: '2024-03-14'
   },
-  // Add 15 more dummy apps with varied categories and properties
-  ...Array.from({ length: 15 }, (_, i) => ({
-    id: i + 6,
-    name: `App ${i + 6}`,
-    description: `Description for App ${i + 6}`,
-    logo: '/placeholder-logo.svg',
-    category: categories[Math.floor(Math.random() * (categories.length - 1)) + 1].name,
-    isVerified: Math.random() > 0.5,
-    rating: Math.floor(Math.random() * 2) + 3, // Random rating between 3-5
-    easyConnect: Math.random() > 0.3,
-    url: `/apps/app-${i + 6}`,
-    featured: Math.random() > 0.8
-  }))
+  // Add more dummy apps as needed
 ];
 
+// Categories data with proper typing
+interface Category {
+  id: string;
+  name: string;
+  icon: 'games' | 'defi' | 'exchange' | 'trading' | 'marketplace' | 'social';
+}
+
+const categories: Category[] = [
+  { id: 'games', name: 'Games', icon: 'games' },
+  { id: 'defi', name: 'DeFi', icon: 'defi' },
+  { id: 'exchange', name: 'Exchange', icon: 'exchange' },
+  { id: 'trading', name: 'Trading', icon: 'trading' },
+  { id: 'marketplace', name: 'Marketplace', icon: 'marketplace' },
+  { id: 'social', name: 'Social', icon: 'social' },
+];
+
+type SortOption = 'rating' | 'featured' | 'newest';
+
 export default function Web3ShoppingMallPage() {
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<SortOption>('featured');
+  const [showHelp, setShowHelp] = useState(false);
 
-  // Filter apps based on search term and selected category
   const filteredApps = useMemo(() => {
-    return dummyApps.filter(app => {
-      const matchesSearch = searchTerm === '' || 
-        app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        app.description.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesCategory = !selectedCategory || 
-        selectedCategory === 'All' || 
-        app.category === selectedCategory;
+    let filtered = [...dummyApps];
 
-      return matchesSearch && matchesCategory;
-    });
-  }, [searchTerm, selectedCategory]);
+    // Apply category filter
+    if (selectedCategory) {
+      filtered = filtered.filter(app => app.category.toLowerCase() === selectedCategory.toLowerCase());
+    }
 
-  // Get featured apps
-  const featuredApps = useMemo(() => {
-    return dummyApps.filter(app => app.featured);
-  }, []);
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(app =>
+        app.name.toLowerCase().includes(query) ||
+        app.description.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply sorting
+    switch (sortBy) {
+      case 'rating':
+        filtered.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'newest':
+        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        break;
+      case 'featured':
+        filtered.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+        break;
+    }
+
+    return filtered;
+  }, [dummyApps, selectedCategory, searchQuery, sortBy]);
 
   return (
     <div className="min-h-screen bg-[#1E1E1E] text-white">
@@ -150,12 +139,23 @@ export default function Web3ShoppingMallPage() {
           </div>
 
           {/* Search Bar */}
-          <div className="mb-12">
-            <SearchBar
-              value={searchTerm}
-              onChange={setSearchTerm}
-              placeholder="Search for apps, categories, or features..."
-            />
+          <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+            <div className="flex-1">
+              <SearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder="Search for apps, categories, or features..."
+              />
+            </div>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              className="px-4 py-2 bg-[#2A2A2A] rounded-lg border border-[#3A3A3A] text-gray-300 focus:outline-none focus:border-[#FFC107]"
+            >
+              <option value="featured">Featured First</option>
+              <option value="rating">Highest Rated</option>
+              <option value="newest">Newest First</option>
+            </select>
           </div>
 
           {/* Featured Apps Section */}
@@ -169,7 +169,7 @@ export default function Web3ShoppingMallPage() {
               />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {featuredApps.map(app => (
+              {filteredApps.filter(app => app.featured).map(app => (
                 <AppCard key={app.id} app={app} />
               ))}
             </div>
@@ -218,18 +218,53 @@ export default function Web3ShoppingMallPage() {
                 <p className="text-gray-400 mb-2">No apps found matching your criteria</p>
                 <button
                   onClick={() => {
-                    setSearchTerm('');
+                    setSearchQuery('');
                     setSelectedCategory(null);
+                    setSortBy('featured');
                   }}
                   className="text-[#FFC107] hover:text-[#FFD700] transition-colors"
                 >
-                  Clear filters
+                  Reset Filters
                 </button>
               </div>
             )}
           </section>
         </div>
       </div>
+
+      {/* Help Modal */}
+      <AnimatePresence>
+        {showHelp && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowHelp(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#2A2A2A] rounded-xl p-6 max-w-lg w-full"
+            >
+              <h2 className="text-2xl font-bold mb-4">Welcome to Web3! 🚀</h2>
+              <div className="space-y-4 text-gray-300">
+                <p><strong>What is Web3?</strong><br />Web3 is the next generation of the internet, where users own their data and digital assets.</p>
+                <p><strong>What is a dApp?</strong><br />A dApp (decentralized application) is an application that runs on a blockchain network.</p>
+                <p><strong>How to get started?</strong><br />1. Connect your wallet<br />2. Browse our curated dApps<br />3. Look for the ⚡ Easy Connect badge for beginner-friendly apps</p>
+              </div>
+              <button
+                onClick={() => setShowHelp(false)}
+                className="mt-6 w-full px-4 py-2 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-medium hover:bg-[#FFD700] transition-colors"
+              >
+                Got it!
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 } 
