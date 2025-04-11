@@ -133,6 +133,7 @@ const pulseAnimation = {
 export default function Page() {
   const [activeAudience, setActiveAudience] = useState<keyof typeof audienceContent>('users');
   const [showVideoModal, setShowVideoModal] = useState(false);
+  const [showMockupModal, setShowMockupModal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const modalVideoRef = useRef<HTMLVideoElement>(null);
@@ -271,64 +272,8 @@ export default function Page() {
         </div>
       </motion.nav>
 
-      {/* Video Modal */}
-      <AnimatePresence>
-        {showVideoModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-            onClick={() => setShowVideoModal(false)}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modal-title"
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="relative aspect-video w-full max-w-4xl bg-[#2A2A2A] rounded-xl overflow-hidden shadow-2xl"
-              onClick={e => e.stopPropagation()}
-            >
-              {!isVideoLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center bg-[#2A2A2A]">
-                  <div className="w-12 h-12 border-4 border-[#FFC107] border-t-transparent rounded-full animate-spin"></div>
-                </div>
-              )}
-              <video
-                ref={modalVideoRef}
-                controls
-                className="absolute inset-0 w-full h-full rounded-xl object-cover"
-                preload="metadata"
-                onLoadedData={handleVideoLoad}
-                aria-label="FreoBus demo video"
-                playsInline
-              >
-                <source src="/demo.mp4#t=0.1" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-              <button
-                onClick={() => setShowVideoModal(false)}
-                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
-                aria-label="Close video"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Hero Section */}
-      <motion.section 
-        variants={fadeInUp}
-        initial="hidden"
-        animate="visible"
-        className="relative h-screen flex items-center justify-center px-4 md:px-8 bg-[#8FBC8F] bg-gradient-to-b from-[#8FBC8F]/90 to-[#1E1E1E]"
-      >
+      <section className="min-h-screen relative flex items-center justify-center">
         <div className="text-center max-w-4xl">
           <motion.h1 
             variants={fadeInUp}
@@ -354,20 +299,15 @@ export default function Page() {
                 Web3 Shopping Mall
               </motion.button>
             </Link>
-            <Link href="/wallet/create">
-              <motion.button
-                {...scaleOnHover}
-                variants={pulseAnimation}
-                initial="initial"
-                animate="animate"
-                className="px-8 py-4 border-2 border-[#FFC107] text-[#FFC107] rounded-lg font-bold text-lg hover:bg-[#FFC107] hover:text-[#1E1E1E] transition-all"
-              >
-                Get Your FreoWallet
-              </motion.button>
-            </Link>
+            <motion.button
+              onClick={() => setShowMockupModal(true)}
+              className="px-8 py-4 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-bold text-lg hover:bg-[#FFD700] transition-all"
+            >
+              Get Your FreoWallet
+            </motion.button>
           </motion.div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Value Props Section */}
       <section className="py-24 bg-[#2A2A2A]">
@@ -448,7 +388,7 @@ export default function Page() {
               preload="metadata"
               aria-label="FreoWallet features demo"
             >
-              <source src="/demo.mp4#t=0.1" type="video/mp4" />
+              <source src="/mockup.mp4#t=0.1" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </motion.div>
@@ -459,15 +399,13 @@ export default function Page() {
             viewport={{ once: true }}
             className="mt-12"
           >
-            <Link href="/wallet/create" className="inline-block">
-              <motion.button
-                {...scaleOnHover}
-                className="px-8 py-4 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-bold text-lg hover:bg-[#FFD700] transition-colors duration-300 shadow-lg"
-                aria-label="Create your FreoWallet"
-              >
-                Get Your FreoWallet Now
-              </motion.button>
-            </Link>
+            <button
+              onClick={() => setShowMockupModal(true)}
+              className="px-8 py-4 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-bold text-lg hover:bg-[#FFD700] transition-colors duration-300 shadow-lg"
+              aria-label="Get your FreoWallet"
+            >
+              Get Your FreoWallet Now
+            </button>
           </motion.div>
         </div>
       </section>
@@ -538,6 +476,102 @@ export default function Page() {
             </div>
         </div>
       </footer>
+
+      {/* FreoBus Demo Video Modal */}
+      <AnimatePresence>
+        {showVideoModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowVideoModal(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative aspect-video w-full max-w-4xl bg-[#2A2A2A] rounded-xl overflow-hidden shadow-2xl"
+              onClick={e => e.stopPropagation()}
+            >
+              {!isVideoLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center bg-[#2A2A2A]">
+                  <div className="w-12 h-12 border-4 border-[#FFC107] border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              )}
+              <video
+                ref={modalVideoRef}
+                controls
+                className="absolute inset-0 w-full h-full rounded-xl object-cover"
+                preload="metadata"
+                onLoadedData={handleVideoLoad}
+                aria-label="FreoBus demo video"
+                playsInline
+              >
+                <source src="/demo.mp4#t=0.1" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <button
+                onClick={() => setShowVideoModal(false)}
+                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
+                aria-label="Close video"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* FreoWallet Mockup Video Modal */}
+      <AnimatePresence>
+        {showMockupModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowMockupModal(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mockup-modal-title"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative aspect-video w-full max-w-4xl bg-[#2A2A2A] rounded-xl overflow-hidden shadow-2xl"
+              onClick={e => e.stopPropagation()}
+            >
+              <video
+                controls
+                autoPlay
+                className="absolute inset-0 w-full h-full rounded-xl object-cover"
+                preload="metadata"
+                aria-label="FreoWallet mockup video"
+                playsInline
+              >
+                <source src="/mockup.mp4#t=0.1" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <button
+                onClick={() => setShowMockupModal(false)}
+                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
+                aria-label="Close mockup video"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 } 
