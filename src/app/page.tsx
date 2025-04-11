@@ -28,8 +28,9 @@ interface AudienceContent {
 }
 
 const navItems: NavItem[] = [
-  { label: "What's FreoBus", href: '#freobus' },
-  { label: 'Web3 Shopping Mall', href: '/marketplace' },
+  { label: 'Home', href: '/' },
+  { label: 'Discover Hub', href: '/discover' },
+  { label: 'FreoWallet', href: '/wallet' },
 ];
 
 const valueProps: ValueProp[] = [
@@ -235,34 +236,24 @@ export default function Page() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <Logo className="py-2" />
-              <div className="hidden md:flex items-center space-x-8 ml-8">
-                {navItems.map((item) => (
-                  item.label === "What's FreoBus" ? (
-                    <button
-                      key={item.label}
-                      onClick={handleFreoBusClick}
-                      className="text-gray-300 hover:text-[#FFC107] transition-colors text-sm font-medium"
-                    >
-                      {item.label}
-                    </button>
-                  ) : (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      className="text-gray-300 hover:text-[#FFC107] transition-colors text-sm font-medium"
-                    >
-                      {item.label}
-                    </Link>
-                  )
-                ))}
-              </div>
             </div>
             
-            <div className="hidden md:flex items-center">
+            <div className="hidden md:flex items-center space-x-6">
+              <button
+                onClick={handleFreoBusClick}
+                className="text-[#FFC107] hover:text-[#FFD700] transition-colors text-sm font-bold"
+              >
+                What's FreoBus
+              </button>
+              <Link
+                href="/marketplace"
+                className="text-gray-300 hover:text-[#FFC107] transition-colors text-sm font-medium"
+              >
+                Web3 Shopping Mall
+              </Link>
               <Link 
                 href="/connect-wallet" 
                 className="px-4 py-2 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-semibold hover:bg-[#FFD700] transition-all"
-                aria-label="Connect your wallet"
               >
                 Connect Your Wallet
               </Link>
@@ -291,29 +282,23 @@ export default function Page() {
                 className="md:hidden py-4"
               >
                 <div className="flex flex-col space-y-4">
-                  {navItems.map((item) => (
-                    item.label === "What's FreoBus" ? (
-                      <button
-                        key={item.label}
-                        onClick={(e) => {
-                          handleFreoBusClick(e);
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className="block text-left hover:text-[#FFC107] transition-colors px-4 text-sm font-medium"
-                      >
-                        {item.label}
-                      </button>
-                    ) : (
-                      <div key={item.label} onClick={() => setIsMobileMenuOpen(false)}>
-                        <Link
-                          href={item.href}
-                          className="block hover:text-[#FFC107] transition-colors px-4 text-sm font-medium"
-                        >
-                          {item.label}
-                        </Link>
-                      </div>
-                    )
-                  ))}
+                  <button
+                    onClick={(e) => {
+                      handleFreoBusClick(e);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="block text-left text-[#FFC107] hover:text-[#FFD700] transition-colors px-4 text-sm font-bold"
+                  >
+                    What's FreoBus
+                  </button>
+                  <Link
+                    href="/marketplace"
+                    className="block hover:text-[#FFC107] transition-colors px-4 text-sm font-medium"
+                  >
+                    <span onClick={() => setIsMobileMenuOpen(false)}>
+                      Web3 Shopping Mall
+                    </span>
+                  </Link>
                   <div className="px-4">
                     <Link 
                       href="/connect-wallet" 
@@ -330,7 +315,12 @@ export default function Page() {
       </motion.nav>
 
       {/* Hero Section */}
-      <section className="min-h-screen relative flex items-center justify-center">
+      <motion.section
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+        className="relative h-screen flex items-center justify-center px-4 md:px-8 bg-[#8FBC8F] bg-gradient-to-b from-[#98FB98]/90 to-[#1E1E1E]"
+      >
         <div className="text-center max-w-4xl">
           <motion.h1 
             variants={fadeInUp}
@@ -364,7 +354,7 @@ export default function Page() {
             </motion.button>
           </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Value Props Section */}
       <motion.section 
