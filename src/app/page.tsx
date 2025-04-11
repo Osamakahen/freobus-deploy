@@ -28,11 +28,8 @@ interface AudienceContent {
 }
 
 const navItems: NavItem[] = [
-  { label: 'Home', href: '/' },
-  { label: 'Discover Hub', href: '/discover' },
-  { label: 'FreoWallet', href: '/wallet' },
   { label: "What's FreoBus", href: '#freobus' },
-  { label: "What's Web3", href: '#web3' },
+  { label: 'Web3 Shopping Mall', href: '/marketplace' },
 ];
 
 const valueProps: ValueProp[] = [
@@ -173,11 +170,9 @@ export default function Page() {
   const [isWeb3VideoLoaded, setIsWeb3VideoLoaded] = useState(false);
   const [isFreoBusVideoLoaded, setIsFreoBusVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState<string | null>(null);
-  
   const modalVideoRef = useRef<HTMLVideoElement>(null);
   const demoVideoRef = useRef<HTMLVideoElement>(null);
   const web3VideoRef = useRef<HTMLVideoElement>(null);
-  const freoBusVideoRef = useRef<HTMLVideoElement>(null);
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
@@ -185,12 +180,6 @@ export default function Page() {
   // Handle video loading
   const handleVideoLoad = (event: React.SyntheticEvent<HTMLVideoElement>) => {
     setIsVideoLoaded(true);
-  };
-
-  // Handle FreoBus nav click
-  const handleFreoBusClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setShowFreoBusModal(true);
   };
 
   // Cleanup video resources when modal closes
@@ -227,10 +216,10 @@ export default function Page() {
     };
   }, []);
 
-  // Handle video error
-  const handleVideoError = (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
-    event.preventDefault();
-    setVideoError("An error occurred while loading the video.");
+  // Handle FreoBus nav click
+  const handleFreoBusClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowFreoBusModal(true);
   };
 
   return (
@@ -244,7 +233,41 @@ export default function Page() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Logo className="py-2" />
+            <div className="flex items-center">
+              <Logo className="py-2" />
+              <div className="hidden md:flex items-center space-x-8 ml-8">
+                {navItems.map((item) => (
+                  item.label === "What's FreoBus" ? (
+                    <button
+                      key={item.label}
+                      onClick={handleFreoBusClick}
+                      className="text-gray-300 hover:text-[#FFC107] transition-colors text-sm font-medium"
+                    >
+                      {item.label}
+                    </button>
+                  ) : (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className="text-gray-300 hover:text-[#FFC107] transition-colors text-sm font-medium"
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                ))}
+              </div>
+            </div>
+            
+            <div className="hidden md:flex items-center">
+              <Link 
+                href="/connect-wallet" 
+                className="px-4 py-2 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-semibold hover:bg-[#FFD700] transition-all"
+                aria-label="Connect your wallet"
+              >
+                Connect Your Wallet
+              </Link>
+            </div>
+
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -256,29 +279,6 @@ export default function Page() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
               </svg>
             </button>
-            <div className="hidden md:flex items-center space-x-8">
-              <button 
-                onClick={() => setShowVideoModal(true)}
-                className="hover:text-[#FFC107] transition-colors"
-                aria-label="Watch FreoBus demo video"
-              >
-                What's <span className="text-[#FFC107] font-semibold">FreoBus</span>?
-              </button>
-              <Link 
-                href="/marketplace" 
-                className="hover:text-[#FFC107] transition-colors"
-                aria-label="Visit Web3 Shopping Mall"
-              >
-                Web3 Shopping Mall
-              </Link>
-              <Link 
-                href="/connect-wallet" 
-                className="px-4 py-2 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-semibold hover:bg-[#FFD700] transition-all"
-                aria-label="Connect your wallet"
-              >
-                Connect Your Wallet
-              </Link>
-            </div>
           </div>
           
           {/* Mobile menu */}
@@ -291,28 +291,33 @@ export default function Page() {
                 className="md:hidden py-4"
               >
                 <div className="flex flex-col space-y-4">
-                  <button 
-                    onClick={() => {
-                      setShowVideoModal(true);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="hover:text-[#FFC107] transition-colors text-left px-4"
-                    aria-label="Watch FreoBus demo video"
-                  >
-                    What's <span className="text-[#FFC107] font-semibold">FreoBus</span>?
-                  </button>
-                  <div onClick={() => setIsMobileMenuOpen(false)}>
-                    <Link 
-                      href="/marketplace" 
-                      className="block hover:text-[#FFC107] transition-colors px-4"
-                    >
-                      Web3 Shopping Mall
-                    </Link>
-                  </div>
-                  <div onClick={() => setIsMobileMenuOpen(false)}>
+                  {navItems.map((item) => (
+                    item.label === "What's FreoBus" ? (
+                      <button
+                        key={item.label}
+                        onClick={(e) => {
+                          handleFreoBusClick(e);
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className="block text-left hover:text-[#FFC107] transition-colors px-4 text-sm font-medium"
+                      >
+                        {item.label}
+                      </button>
+                    ) : (
+                      <div key={item.label} onClick={() => setIsMobileMenuOpen(false)}>
+                        <Link
+                          href={item.href}
+                          className="block hover:text-[#FFC107] transition-colors px-4 text-sm font-medium"
+                        >
+                          {item.label}
+                        </Link>
+                      </div>
+                    )
+                  ))}
+                  <div className="px-4">
                     <Link 
                       href="/connect-wallet" 
-                      className="block px-4 py-2 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-semibold hover:bg-[#FFD700] transition-all mx-4"
+                      className="block w-full px-4 py-2 bg-[#FFC107] text-center text-[#1E1E1E] rounded-lg font-semibold hover:bg-[#FFD700] transition-all"
                     >
                       Connect Your Wallet
                     </Link>
@@ -325,12 +330,7 @@ export default function Page() {
       </motion.nav>
 
       {/* Hero Section */}
-      <motion.section
-        variants={fadeInUp}
-        initial="hidden"
-        animate="visible"
-        className="relative h-screen flex items-center justify-center px-4 md:px-8 bg-[#8FBC8F] bg-gradient-to-b from-[#98FB98]/90 to-[#1E1E1E]"
-      >
+      <section className="min-h-screen relative flex items-center justify-center">
         <div className="text-center max-w-4xl">
           <motion.h1 
             variants={fadeInUp}
@@ -364,7 +364,7 @@ export default function Page() {
             </motion.button>
           </motion.div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Value Props Section */}
       <motion.section 
@@ -748,64 +748,6 @@ export default function Page() {
                 onClick={() => setShowWeb3Modal(false)}
                 className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
                 aria-label="Close Web3 video"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Add FreoBus Video Modal */}
-      <AnimatePresence>
-        {showFreoBusModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-            onClick={() => setShowFreoBusModal(false)}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="freobus-modal-title"
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="relative aspect-video w-full max-w-4xl bg-[#2A2A2A] rounded-xl overflow-hidden shadow-2xl"
-              onClick={e => e.stopPropagation()}
-            >
-              {!isFreoBusVideoLoaded && !videoError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-[#2A2A2A]">
-                  <div className="w-12 h-12 border-4 border-[#FFC107] border-t-transparent rounded-full animate-spin"></div>
-                </div>
-              )}
-              {videoError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-[#2A2A2A] text-red-500">
-                  {videoError}
-                </div>
-              )}
-              <video
-                ref={freoBusVideoRef}
-                controls
-                autoPlay
-                className="absolute inset-0 w-full h-full rounded-xl object-cover"
-                preload="metadata"
-                onLoadedData={(e) => handleVideoLoad(e)}
-                onError={handleVideoError}
-                aria-label="FreoBus concept video"
-                playsInline
-              >
-                <source src="/freobus-concept.mp4#t=0.1" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-              <button
-                onClick={() => setShowFreoBusModal(false)}
-                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
-                aria-label="Close FreoBus video"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
