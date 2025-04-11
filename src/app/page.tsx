@@ -163,10 +163,12 @@ export default function Page() {
   const [activeAudience, setActiveAudience] = useState<keyof typeof audienceContent>('users');
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [showMockupModal, setShowMockupModal] = useState(false);
+  const [showWeb3Modal, setShowWeb3Modal] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const modalVideoRef = useRef<HTMLVideoElement>(null);
   const demoVideoRef = useRef<HTMLVideoElement>(null);
+  const web3VideoRef = useRef<HTMLVideoElement>(null);
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
@@ -509,12 +511,13 @@ export default function Page() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <Link href={audienceContent[activeAudience].buttonHref}>
+              {activeAudience === 'web3' ? (
                 <motion.button
                   {...scaleOnHover}
+                  onClick={() => setShowWeb3Modal(true)}
                   className="px-8 py-4 bg-gradient-to-r from-[#FFC107] to-[#FFD700] text-[#1E1E1E] rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  {audienceContent[activeAudience].buttonText}
+                  Watch Video
                   <motion.span 
                     className="inline-block ml-2"
                     initial={{ x: 0 }}
@@ -524,7 +527,24 @@ export default function Page() {
                     →
                   </motion.span>
                 </motion.button>
-              </Link>
+              ) : (
+                <Link href={audienceContent[activeAudience].buttonHref}>
+                  <motion.button
+                    {...scaleOnHover}
+                    className="px-8 py-4 bg-gradient-to-r from-[#FFC107] to-[#FFD700] text-[#1E1E1E] rounded-lg font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    {audienceContent[activeAudience].buttonText}
+                    <motion.span 
+                      className="inline-block ml-2"
+                      initial={{ x: 0 }}
+                      whileHover={{ x: 5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      →
+                    </motion.span>
+                  </motion.button>
+                </Link>
+              )}
             </motion.div>
           </motion.div>
         </div>
@@ -656,6 +676,52 @@ export default function Page() {
                 onClick={() => setShowMockupModal(false)}
                 className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
                 aria-label="Close mockup video"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Web3 Video Modal */}
+      <AnimatePresence>
+        {showWeb3Modal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowWeb3Modal(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="web3-modal-title"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative aspect-video w-full max-w-4xl bg-[#2A2A2A] rounded-xl overflow-hidden shadow-2xl"
+              onClick={e => e.stopPropagation()}
+            >
+              <video
+                ref={web3VideoRef}
+                controls
+                autoPlay
+                className="absolute inset-0 w-full h-full rounded-xl object-cover"
+                preload="metadata"
+                aria-label="Web3 explanation video"
+                playsInline
+              >
+                <source src="/demo.mp4#t=0.1" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <button
+                onClick={() => setShowWeb3Modal(false)}
+                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
+                aria-label="Close Web3 video"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
