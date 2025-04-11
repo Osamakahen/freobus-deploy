@@ -29,8 +29,10 @@ interface AudienceContent {
 
 const navItems: NavItem[] = [
   { label: 'Home', href: '/' },
-  { label: 'Discover Hub', href: '/discover' },
+  { label: 'Web3 Shopping Mall', href: '/marketplace' },
   { label: 'FreoWallet', href: '/wallet' },
+  { label: "What's FreoBus", href: '#freobus' },
+  { label: "What's Web3", href: '#web3' },
 ];
 
 const valueProps: ValueProp[] = [
