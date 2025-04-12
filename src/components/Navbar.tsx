@@ -23,12 +23,15 @@ export default function Navbar({ onFreoBusClick }: NavbarProps) {
 
           {/* Right side - Navigation Links and Connect Wallet */}
           <div className="flex items-center space-x-6">
-            <button
+            <MotionButton
               onClick={onFreoBusClick}
-              className="text-[#FFC107] hover:text-[#FFD700] transition-colors text-sm font-bold"
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative px-6 py-2 text-sm font-bold text-[#1E1E1E] bg-gradient-to-r from-[#FFC107] to-[#FFD700] rounded-full shadow-lg hover:shadow-[#FFC107]/50 hover:from-[#FFD700] hover:to-[#FFE44D] transition-all duration-300 overflow-hidden"
             >
-              What's FreoBus
-            </button>
+              <span className="relative z-10">What's FreoBus</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-[#FFD700] to-[#FFE44D] opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
+            </MotionButton>
             <Link
               href="/marketplace"
               className="text-gray-300 hover:text-[#FFC107] transition-colors text-sm font-medium"
