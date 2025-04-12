@@ -234,9 +234,30 @@ export default function Marketplace() {
         <div className="flex flex-col space-y-8">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
-            <div>
-              <h1 className="text-4xl font-bold">Web3 Shopping Mall</h1>
-              <p className="mt-2 text-gray-400">Discover and connect with the best Web3 applications</p>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => window.history.back()}
+                className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-[#2A2A2A] hover:bg-[#3A3A3A] transition-colors"
+                aria-label="Go back"
+              >
+                <svg
+                  className="w-6 h-6 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                  />
+                </svg>
+              </button>
+              <div>
+                <h1 className="text-4xl font-bold">Web3 Shopping Mall</h1>
+                <p className="mt-2 text-gray-400">Discover and connect with the best Web3 applications</p>
+              </div>
             </div>
             <button
               onClick={() => setShowHelp(true)}
