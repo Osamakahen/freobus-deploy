@@ -9,11 +9,6 @@ import '@fontsource/inter';
 import Navbar from '@/components/Navbar';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
-interface NavItem {
-  label: string;
-  href: string;
-}
-
 interface ValueProp {
   title: string;
   description: string;
@@ -44,11 +39,6 @@ const CustomLink: React.FC<CustomLinkProps> = ({ onClick, children, className, .
     </div>
   );
 };
-
-const navItems: NavItem[] = [
-  { label: "What's FreoBus", href: '#freobus' },
-  { label: 'Web3 Shopping Mall', href: '/marketplace' },
-];
 
 const valueProps: ValueProp[] = [
   {
@@ -235,120 +225,9 @@ export default function Page() {
     };
   }, []);
 
-  // Handle FreoBus nav click
-  const handleFreoBusClick = () => {
-    setShowFreoBusModal(true);
-  };
-
   return (
     <>
-      <motion.nav
-        variants={navVariants}
-        initial="hidden"
-        animate="visible"
-        className="fixed w-full top-0 z-50 bg-[#1E1E1E]/80 backdrop-blur-sm"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <Logo className="py-2" />
-              <div className="hidden md:flex items-center space-x-8 ml-8">
-                {navItems.map((item) => (
-                  item.label === "What's FreoBus" ? (
-                    <button
-                      key={item.label}
-                      onClick={() => {
-                        setShowFreoBusModal(true);
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="text-gray-300 hover:text-[#FFC107] transition-colors text-sm font-medium"
-                    >
-                      {item.label}
-                    </button>
-                  ) : (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      className="text-gray-300 hover:text-[#FFC107] transition-colors text-sm font-medium"
-                    >
-                      {item.label}
-                    </Link>
-                  )
-                ))}
-              </div>
-            </div>
-            <div className="hidden md:flex items-center">
-              <button
-                className="bg-[#FFC107] text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#FFC107]/90 transition-colors"
-                onClick={() => {/* Wallet connection logic */}}
-              >
-                Connect Your Wallet
-              </button>
-            </div>
-            {/* Mobile menu button */}
-            <div className="md:hidden flex items-center">
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-gray-300 hover:text-[#FFC107] transition-colors"
-                aria-label="Toggle menu"
-              >
-                {isMobileMenuOpen ? (
-                  <XMarkIcon className="h-6 w-6" />
-                ) : (
-                  <Bars3Icon className="h-6 w-6" />
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile menu */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="md:hidden"
-            >
-              <div className="px-4 pt-2 pb-3 space-y-2 bg-[#1E1E1E]/95 backdrop-blur-sm">
-                {navItems.map((item) => (
-                  item.label === "What's FreoBus" ? (
-                    <button
-                      key={item.label}
-                      onClick={() => {
-                        setShowFreoBusModal(true);
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="block w-full text-left px-4 py-2 text-gray-300 hover:text-[#FFC107] transition-colors text-sm font-medium"
-                    >
-                      {item.label}
-                    </button>
-                  ) : (
-                    <CustomLink
-                      key={item.label}
-                      href={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="block text-left hover:text-[#FFC107] transition-colors px-4 text-sm font-medium"
-                    >
-                      {item.label}
-                    </CustomLink>
-                  )
-                ))}
-                <button
-                  className="w-full mt-4 bg-[#FFC107] text-black px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#FFC107]/90 transition-colors"
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    /* Wallet connection logic */
-                  }}
-                >
-                  Connect Your Wallet
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.nav>
+      <Navbar onFreoBusClick={() => setShowFreoBusModal(true)} />
       <main className="min-h-screen bg-[#1E1E1E] text-white">
         {/* Hero Section */}
         <motion.section
