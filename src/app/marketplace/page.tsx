@@ -6,6 +6,7 @@ import SearchBar from '@/components/marketplace/SearchBar';
 import CategoryGrid from '@/components/marketplace/CategoryGrid';
 import AppCard from '@/components/marketplace/AppCard';
 import { Skeleton } from '@/components/ui/skeleton';
+import Navbar from '@/components/Navbar';
 
 interface App {
   id: string;
@@ -230,44 +231,28 @@ export default function Marketplace() {
 
   return (
     <main className="min-h-screen bg-[#1E1E1E] text-white pb-20">
+      <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24">
         <div className="flex flex-col space-y-8">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
+            <h1 className="text-3xl font-bold">Web3 Shopping Mall</h1>
             <div className="flex items-center space-x-4">
-              <button
-                onClick={() => window.history.back()}
-                className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-[#2A2A2A] hover:bg-[#3A3A3A] transition-colors"
-                aria-label="Go back"
+              <SearchBar
+                value={searchQuery}
+                onChange={setSearchQuery}
+                onHelp={() => setShowHelp(true)}
+              />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="bg-[#2A2A2A] text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#FFC107]"
               >
-                <svg
-                  className="w-6 h-6 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                  />
-                </svg>
-              </button>
-              <div>
-                <h1 className="text-4xl font-bold">Web3 Shopping Mall</h1>
-                <p className="mt-2 text-gray-400">Discover and connect with the best Web3 applications</p>
-              </div>
+                <option value="featured">Featured</option>
+                <option value="rating">Top Rated</option>
+                <option value="newest">Newest</option>
+              </select>
             </div>
-            <button
-              onClick={() => setShowHelp(true)}
-              className="inline-flex items-center px-4 py-2 rounded-lg bg-[#2A2A2A] hover:bg-[#3A3A3A] transition-colors"
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              New to Web3?
-            </button>
           </div>
 
           {/* Featured Apps Carousel */}
@@ -287,28 +272,6 @@ export default function Marketplace() {
               </div>
             </div>
           )}
-
-          {/* Search and Sort */}
-          <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-            <div className="flex-1">
-              <SearchBar
-                value={searchQuery}
-                onChange={setSearchQuery}
-                placeholder="Search by name, category, or description..."
-                isLoading={isLoading}
-              />
-            </div>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="px-4 py-2 bg-[#2A2A2A] rounded-lg border border-[#3A3A3A] text-gray-300 focus:outline-none focus:border-[#FFC107]"
-              disabled={isLoading}
-            >
-              <option value="featured">Featured First</option>
-              <option value="rating">Highest Rated</option>
-              <option value="newest">Newest First</option>
-            </select>
-          </div>
 
           {/* Categories */}
           {isLoading ? (

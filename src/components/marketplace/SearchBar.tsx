@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
+  onHelp?: () => void;
   placeholder?: string;
   isLoading?: boolean;
 }
@@ -11,7 +12,8 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({
   value,
   onChange,
-  placeholder = 'Search...',
+  onHelp,
+  placeholder = 'Search by name, category, or description...',
   isLoading = false,
 }) => {
   return (
@@ -83,6 +85,17 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 strokeWidth={2}
                 d="M6 18L18 6M6 6l12 12"
               />
+            </svg>
+          </button>
+        )}
+        {onHelp && (
+          <button
+            onClick={onHelp}
+            className="absolute right-3 text-gray-400 hover:text-[#FFC107]"
+            aria-label="Help"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </button>
         )}
