@@ -1,7 +1,9 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import Logo from './Logo';
+import { MotionButton } from './motion';
 
 interface NavbarProps {
   onFreoBusClick: () => void;
@@ -33,13 +35,13 @@ export default function Navbar({ onFreoBusClick }: NavbarProps) {
             >
               Web3 Shopping Mall
             </Link>
-            <motion.button
+            <MotionButton
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="px-4 py-2 bg-gradient-to-r from-[#FFC107] to-[#FFD700] text-[#1E1E1E] rounded-lg text-sm font-bold hover:from-[#FFD700] hover:to-[#FFE44D] transition-all"
             >
               Connect Your Wallet
-            </motion.button>
+            </MotionButton>
           </div>
         </div>
       </div>
