@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Logo from './Logo';
 import { MotionButton } from './motion';
 
@@ -12,20 +12,44 @@ interface NavbarProps {
 
 export default function Navbar({ onFreoBusClick }: NavbarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const isMarketplace = pathname === '/marketplace';
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1E1E1E]/80 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Left side - Logo only */}
-          <div className="flex-shrink-0">
+          {/* Left side - Logo and Back Button for marketplace */}
+          <div className="flex items-center space-x-4">
+            {isMarketplace && (
+              <MotionButton
+                onClick={() => router.back()}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-[#2A2A2A] hover:bg-[#3A3A3A] transition-colors"
+                aria-label="Go back"
+              >
+                <svg
+                  className="w-6 h-6 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </MotionButton>
+            )}
             <Link href="/">
               <Logo className="py-2" />
             </Link>
           </div>
 
-          {/* Right side - Navigation Links and Connect Wallet (only shown on main page) */}
+          {/* Right side - Navigation Links and Connect Wallet (only for main page) */}
           {!isMarketplace && (
             <div className="flex items-center space-x-6">
               {/* What's FreoBus - Made distinct */}
