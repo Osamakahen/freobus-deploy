@@ -49,7 +49,84 @@ const dummyApps: App[] = [
     featured: true,
     createdAt: '2024-03-14'
   },
-  // Add more dummy apps as needed
+  {
+    id: '3',
+    name: 'DeFi Yield',
+    description: 'Earn passive income through yield farming',
+    logo: '/placeholder-logo.svg',
+    category: 'defi',
+    isVerified: true,
+    rating: 4.6,
+    easyConnect: true,
+    url: '/apps/defi-yield',
+    featured: false,
+    createdAt: '2024-03-13'
+  },
+  {
+    id: '4',
+    name: 'Crypto Quest',
+    description: 'Play-to-earn RPG adventure game',
+    logo: '/placeholder-logo.svg',
+    category: 'games',
+    isVerified: false,
+    rating: 4.2,
+    easyConnect: true,
+    url: '/apps/crypto-quest',
+    featured: false,
+    createdAt: '2024-03-12'
+  },
+  {
+    id: '5',
+    name: 'Trade Pro',
+    description: 'Advanced trading platform with real-time analytics',
+    logo: '/placeholder-logo.svg',
+    category: 'trading',
+    isVerified: true,
+    rating: 4.7,
+    easyConnect: false,
+    url: '/apps/trade-pro',
+    featured: false,
+    createdAt: '2024-03-11'
+  },
+  {
+    id: '6',
+    name: 'Web3 Social',
+    description: 'Decentralized social networking platform',
+    logo: '/placeholder-logo.svg',
+    category: 'social',
+    isVerified: true,
+    rating: 4.4,
+    easyConnect: true,
+    url: '/apps/web3-social',
+    featured: false,
+    createdAt: '2024-03-10'
+  },
+  {
+    id: '7',
+    name: 'GameFi Hub',
+    description: 'Discover and play blockchain games',
+    logo: '/placeholder-logo.svg',
+    category: 'games',
+    isVerified: true,
+    rating: 4.3,
+    easyConnect: true,
+    url: '/apps/gamefi-hub',
+    featured: false,
+    createdAt: '2024-03-09'
+  },
+  {
+    id: '8',
+    name: 'DeFi Lend',
+    description: 'Borrow and lend crypto assets',
+    logo: '/placeholder-logo.svg',
+    category: 'defi',
+    isVerified: true,
+    rating: 4.5,
+    easyConnect: false,
+    url: '/apps/defi-lend',
+    featured: false,
+    createdAt: '2024-03-08'
+  }
 ];
 
 // Categories data with proper typing
