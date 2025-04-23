@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import { ConnectWalletButton } from '@/components/ConnectWalletButton';
 import Logo from '@/components/Logo';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const carouselItems = [
   {
@@ -37,9 +38,9 @@ const carouselItems = [
 ];
 
 const trustBadges = [
-  { name: 'Certik', logo: '/certik-logo.png', alt: 'Certik Audited' },
-  { name: 'Polygon', logo: '/polygon-logo.png', alt: 'Polygon Network' },
-  { name: 'Arbitrum', logo: '/arbitrum-logo.png', alt: 'Arbitrum Network' }
+  { name: 'Certik', logo: '/certik-logo.svg', alt: 'Certik Audited' },
+  { name: 'Polygon', logo: '/polygon-logo.svg', alt: 'Polygon Network' },
+  { name: 'Arbitrum', logo: '/arbitrum-logo.svg', alt: 'Arbitrum Network' }
 ];
 
 const navVariants = {
@@ -47,8 +48,15 @@ const navVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
+const carouselVariants = {
+  enter: { opacity: 0, x: 100 },
+  center: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -100 }
+};
+
 export default function WalletPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -60,87 +68,176 @@ export default function WalletPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <motion.nav
-        variants={navVariants}
-        initial="hidden"
-        animate="visible"
-        className="fixed w-full top-0 z-50 bg-[#1E1E1E]/80 backdrop-blur-sm"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <Logo className="py-2" />
-            </div>
-            <div className="flex items-center space-x-6">
-              <Link
-                href="/"
-                className="text-gray-300 hover:text-[#FFC107] transition-colors text-sm font-medium"
-              >
-                Back to Home
-              </Link>
-              <ConnectWalletButton />
+      {/* Top Section - Promotional Banner */}
+      <div className="relative h-screen bg-gradient-to-b from-[#8FBC8F] to-[#1E1E1E]">
+        {/* Navigation */}
+        <motion.nav
+          variants={navVariants}
+          initial="hidden"
+          animate="visible"
+          className="fixed w-full top-0 z-50 bg-[#1E1E1E]/80 backdrop-blur-sm"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              <div className="flex items-center">
+                <Image
+                  src="/freowallet-logo.svg"
+                  alt="FreoWallet Logo"
+                  width={40}
+                  height={40}
+                  className="mr-2"
+                />
+              </div>
+              <div className="flex items-center space-x-6">
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="text-gray-300 hover:text-[#FFC107] transition-colors"
+                >
+                  <Bars3Icon className="h-6 w-6" />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </motion.nav>
+        </motion.nav>
 
-      {/* Hero Section */}
-      <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-[#8FBC8F] bg-gradient-to-b from-[#98FB98]/90 to-[#1E1E1E]" />
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
-          <div className="text-center">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-[#FFC107]"
-            >
-              Welcome to FreoWallet
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto"
-            >
-              Your gateway to the decentralized web. Secure, simple, and ready for the future.
-            </motion.p>
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+              initial={{ opacity: 0, x: '100%' }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: '100%' }}
+              className="fixed inset-0 bg-[#1E1E1E] z-50 p-4"
             >
-              <button className="w-full sm:w-auto px-8 py-3 bg-[#FFC107] text-[#1E1E1E] font-medium rounded-lg hover:bg-[#FFD54F] transition-colors">
-                Create New Wallet
-              </button>
-              <button className="w-full sm:w-auto px-8 py-3 border border-[#FFC107] text-[#FFC107] font-medium rounded-lg hover:bg-[#FFC107]/10 transition-colors">
-                Import Wallet
-              </button>
+              <div className="flex justify-end mb-8">
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-gray-300 hover:text-[#FFC107]"
+                >
+                  <XMarkIcon className="h-6 w-6" />
+                </button>
+              </div>
+              <div className="space-y-4">
+                <Link href="/learn" className="block text-gray-300 hover:text-[#FFC107]">
+                  Learn More
+                </Link>
+                <Link href="/faq" className="block text-gray-300 hover:text-[#FFC107]">
+                  FAQ
+                </Link>
+                <Link href="/" className="block text-gray-300 hover:text-[#FFC107]">
+                  Back to Home
+                </Link>
+              </div>
             </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Banner Content */}
+        <div className="relative h-full flex flex-col items-center justify-center px-4">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-4xl md:text-5xl font-bold text-center mb-12 text-white font-montserrat"
+          >
+            Your Trusted and Easy-Going Web3 Mate
+          </motion.h1>
+
+          {/* Carousel */}
+          <div className="relative w-full max-w-2xl mx-auto">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentSlide}
+                variants={carouselVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.5 }}
+                className="text-center"
+              >
+                <div className="text-6xl mb-4">{carouselItems[currentSlide].icon}</div>
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                  {carouselItems[currentSlide].title}
+                </h2>
+                <p className="text-gray-200 text-lg">
+                  {carouselItems[currentSlide].description}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Pagination Dots */}
+            <div className="flex justify-center mt-8 space-x-2">
+              {carouselItems.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    currentSlide === index ? 'bg-[#FFC107]' : 'bg-gray-400'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Login Section */}
+      {/* Bottom Section - Sign Up/Login */}
       <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-left">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1E1E1E] mb-6 font-serif">
+          <div className="text-center">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-4xl md:text-5xl font-bold text-[#1E1E1E] mb-6 font-montserrat"
+            >
               Welcome to FreoWallet
-            </h2>
-            <p className="text-xl text-gray-700 mb-8 max-w-3xl">
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-xl text-gray-700 mb-12 max-w-3xl mx-auto"
+            >
               Experience the future of digital finance with FreoWallet. Your secure, user-friendly gateway to the decentralized web.
-            </p>
-            <div className="flex flex-col sm:flex-row items-start gap-4">
-              <button className="px-6 py-3 bg-[#FFC107] text-[#1E1E1E] font-medium rounded-lg hover:bg-[#FFD54F] transition-colors">
+            </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
+            >
+              <button
+                className="px-8 py-4 bg-gradient-to-r from-[#FFD700] to-[#DAA520] text-[#1E1E1E] font-bold rounded-lg hover:shadow-lg transition-all duration-300"
+              >
+                Get FreoWallet Now
+              </button>
+              <button className="px-6 py-3 border border-[#A3E4D7] text-[#1E1E1E] rounded-lg hover:bg-[#A3E4D7]/10 transition-colors">
                 Sign in with Password
               </button>
-              <button className="px-6 py-3 border border-[#FFC107] text-[#FFC107] font-medium rounded-lg hover:bg-[#FFC107]/10 transition-colors">
-                Learn More
-              </button>
-            </div>
+            </motion.div>
+
+            {/* Trust Badges */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="flex flex-wrap justify-center items-center gap-8 mt-12"
+            >
+              {trustBadges.map((badge) => (
+                <div key={badge.name} className="flex items-center">
+                  <Image
+                    src={badge.logo}
+                    alt={badge.alt}
+                    width={100}
+                    height={40}
+                    className="grayscale hover:grayscale-0 transition-all duration-300"
+                  />
+                </div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </div>
