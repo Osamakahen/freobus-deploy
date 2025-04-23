@@ -285,12 +285,14 @@ export default function Page() {
                   Web3 Shopping Mall
                 </motion.button>
               </Link>
-              <motion.button
-                onClick={() => setShowMockupModal(true)}
-                className="px-8 py-4 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-bold text-lg hover:bg-[#FFD700] transition-all"
-              >
-                Get Your FreoWallet
-              </motion.button>
+              <Link href="/wallet">
+                <motion.button
+                  {...scaleOnHover}
+                  className="px-8 py-4 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-bold text-lg hover:bg-[#FFD700] transition-all"
+                >
+                  Get Your FreoWallet
+                </motion.button>
+              </Link>
             </motion.div>
           </div>
         </motion.section>
