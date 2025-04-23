@@ -170,7 +170,7 @@ export default function WalletPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-4xl md:text-5xl font-bold text-center mb-12 text-white font-montserrat"
+            className="text-4xl md:text-5xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] font-montserrat"
           >
             Your Trusted and Easy-Going Web3 Mate
           </motion.h1>
