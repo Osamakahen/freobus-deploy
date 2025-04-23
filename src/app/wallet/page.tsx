@@ -54,6 +54,18 @@ const carouselVariants = {
   exit: { opacity: 0, x: -100 }
 };
 
+const logoVariants = {
+  initial: { scale: 1 },
+  hover: { 
+    scale: 1.05,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 10
+    }
+  }
+};
+
 export default function WalletPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -80,18 +92,22 @@ export default function WalletPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
-                <Image
-                  src="/freowallet-logo.svg"
-                  alt="FreoWallet Logo"
-                  width={40}
-                  height={40}
-                  className="mr-2"
-                />
+                <motion.div
+                  variants={logoVariants}
+                  initial="initial"
+                  whileHover="hover"
+                  className="flex items-center"
+                >
+                  <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#8FBC8F] to-[#FFC107] tracking-wider">
+                    FreoWallet
+                  </span>
+                </motion.div>
               </div>
               <div className="flex items-center space-x-6">
                 <button
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
                   className="text-gray-300 hover:text-[#FFC107] transition-colors"
+                  aria-label="Open menu"
                 >
                   <Bars3Icon className="h-6 w-6" />
                 </button>
@@ -113,20 +129,36 @@ export default function WalletPage() {
                 <button
                   onClick={() => setIsMenuOpen(false)}
                   className="text-gray-300 hover:text-[#FFC107]"
+                  aria-label="Close menu"
                 >
                   <XMarkIcon className="h-6 w-6" />
                 </button>
               </div>
               <div className="space-y-4">
-                <Link href="/learn" className="block text-gray-300 hover:text-[#FFC107]">
-                  Learn More
-                </Link>
-                <Link href="/faq" className="block text-gray-300 hover:text-[#FFC107]">
-                  FAQ
-                </Link>
-                <Link href="/" className="block text-gray-300 hover:text-[#FFC107]">
-                  Back to Home
-                </Link>
+                <div onClick={() => setIsMenuOpen(false)}>
+                  <Link 
+                    href="/learn" 
+                    className="block text-gray-300 hover:text-[#FFC107] transition-colors duration-300"
+                  >
+                    Learn More
+                  </Link>
+                </div>
+                <div onClick={() => setIsMenuOpen(false)}>
+                  <Link 
+                    href="/faq" 
+                    className="block text-gray-300 hover:text-[#FFC107] transition-colors duration-300"
+                  >
+                    FAQ
+                  </Link>
+                </div>
+                <div onClick={() => setIsMenuOpen(false)}>
+                  <Link 
+                    href="/" 
+                    className="block text-gray-300 hover:text-[#FFC107] transition-colors duration-300"
+                  >
+                    Back to Home
+                  </Link>
+                </div>
               </div>
             </motion.div>
           )}
@@ -155,25 +187,44 @@ export default function WalletPage() {
                 transition={{ duration: 0.5 }}
                 className="text-center"
               >
-                <div className="text-6xl mb-4">{carouselItems[currentSlide].icon}</div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                <motion.div 
+                  className="text-6xl mb-4"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  {carouselItems[currentSlide].icon}
+                </motion.div>
+                <motion.h2 
+                  className="text-2xl md:text-3xl font-bold text-white mb-2"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
                   {carouselItems[currentSlide].title}
-                </h2>
-                <p className="text-gray-200 text-lg">
+                </motion.h2>
+                <motion.p 
+                  className="text-gray-200 text-lg"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
                   {carouselItems[currentSlide].description}
-                </p>
+                </motion.p>
               </motion.div>
             </AnimatePresence>
 
             {/* Pagination Dots */}
             <div className="flex justify-center mt-8 space-x-2">
               {carouselItems.map((_, index) => (
-                <button
+                <motion.button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
                   className={`w-3 h-3 rounded-full transition-colors ${
                     currentSlide === index ? 'bg-[#FFC107]' : 'bg-gray-400'
                   }`}
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
                 />
               ))}
             </div>
@@ -191,7 +242,7 @@ export default function WalletPage() {
               transition={{ duration: 0.8 }}
               className="text-4xl md:text-5xl font-bold text-[#1E1E1E] mb-6 font-montserrat"
             >
-              Welcome to FreoWallet
+              Welcome to <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#8FBC8F] to-[#FFC107]">FreoWallet</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -209,14 +260,20 @@ export default function WalletPage() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
             >
-              <button
+              <motion.button
                 className="px-8 py-4 bg-gradient-to-r from-[#FFD700] to-[#DAA520] text-[#1E1E1E] font-bold rounded-lg hover:shadow-lg transition-all duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 Get FreoWallet Now
-              </button>
-              <button className="px-6 py-3 border border-[#A3E4D7] text-[#1E1E1E] rounded-lg hover:bg-[#A3E4D7]/10 transition-colors">
+              </motion.button>
+              <motion.button 
+                className="px-6 py-3 border border-[#A3E4D7] text-[#1E1E1E] rounded-lg hover:bg-[#A3E4D7]/10 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 Sign in with Password
-              </button>
+              </motion.button>
             </motion.div>
 
             {/* Trust Badges */}
@@ -227,7 +284,12 @@ export default function WalletPage() {
               className="flex flex-wrap justify-center items-center gap-8 mt-12"
             >
               {trustBadges.map((badge) => (
-                <div key={badge.name} className="flex items-center">
+                <motion.div 
+                  key={badge.name} 
+                  className="flex items-center"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
                   <Image
                     src={badge.logo}
                     alt={badge.alt}
@@ -235,7 +297,7 @@ export default function WalletPage() {
                     height={40}
                     className="grayscale hover:grayscale-0 transition-all duration-300"
                   />
-                </div>
+                </motion.div>
               ))}
             </motion.div>
           </div>
