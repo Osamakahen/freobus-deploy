@@ -55,7 +55,7 @@ export default function Navbar({ onFreoBusClick }: NavbarProps) {
 
           {/* Right side - ALL Navigation Items */}
           {!isMarketplace && (
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
               <MotionButton
                 onClick={onFreoBusClick}
                 whileHover={{ scale: 1.05, y: -1 }}
