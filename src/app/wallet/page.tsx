@@ -87,26 +87,44 @@ export default function WalletPage() {
           variants={navVariants}
           initial="hidden"
           animate="visible"
-          className="fixed w-full top-0 z-50 bg-[#1E1E1E]/80 backdrop-blur-sm"
+          className="fixed w-full top-0 z-50 bg-[#1E1E1E]/80 backdrop-blur-sm border-b border-[#FFD700]/10"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center">
+            <div className="flex items-center justify-between h-20">
+              <div className="flex items-center space-x-8">
                 <motion.div
                   variants={logoVariants}
                   initial="initial"
                   whileHover="hover"
                   className="flex items-center"
                 >
-                  <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#8FBC8F] to-[#FFC107] tracking-wider">
+                  <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] tracking-wider">
                     FreoWallet
                   </span>
                 </motion.div>
+                <div className="hidden md:flex items-center space-x-8">
+                  <Link href="/learn" className="text-gray-300 hover:text-[#FFD700] transition-colors duration-300">
+                    Learn More
+                  </Link>
+                  <Link href="/faq" className="text-gray-300 hover:text-[#FFD700] transition-colors duration-300">
+                    FAQ
+                  </Link>
+                  <Link href="/" className="text-gray-300 hover:text-[#FFD700] transition-colors duration-300">
+                    Back to Home
+                  </Link>
+                </div>
               </div>
               <div className="flex items-center space-x-6">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="hidden md:block px-6 py-2 bg-gradient-to-r from-[#FFD700] to-[#DAA520] text-[#1E1E1E] font-semibold rounded-lg hover:shadow-lg transition-all duration-300"
+                >
+                  Get Started
+                </motion.button>
                 <button
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  className="text-gray-300 hover:text-[#FFC107] transition-colors"
+                  className="text-gray-300 hover:text-[#FFD700] transition-colors md:hidden"
                   aria-label="Open menu"
                 >
                   <Bars3Icon className="h-6 w-6" />
@@ -233,21 +251,30 @@ export default function WalletPage() {
       </div>
 
       {/* Bottom Section - Sign Up/Login */}
-      <div className="bg-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        viewport={{ once: true }}
+        className="relative bg-white py-24 overflow-hidden"
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1E1E1E]/5 to-transparent" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
               className="text-4xl md:text-5xl font-bold text-[#1E1E1E] mb-6 font-montserrat"
             >
-              Welcome to <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#8FBC8F] to-[#FFC107]">FreoWallet</span>
+              Welcome to <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B]">FreoWallet</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
               className="text-xl text-gray-700 mb-12 max-w-3xl mx-auto"
             >
               Experience the future of digital finance with FreoWallet. Your secure, user-friendly gateway to the decentralized web.
@@ -256,21 +283,30 @@ export default function WalletPage() {
             {/* CTA Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
+              viewport={{ once: true }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12"
             >
               <motion.button
-                className="px-8 py-4 bg-gradient-to-r from-[#FFD700] to-[#DAA520] text-[#1E1E1E] font-bold rounded-lg hover:shadow-lg transition-all duration-300"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-gradient-to-r from-[#FFD700] to-[#DAA520] text-[#1E1E1E] font-bold rounded-lg hover:shadow-lg transition-all duration-300 shadow-md"
               >
                 Get FreoWallet Now
+                <motion.span 
+                  className="inline-block ml-2"
+                  initial={{ x: 0 }}
+                  whileHover={{ x: 5 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  →
+                </motion.span>
               </motion.button>
               <motion.button 
-                className="px-6 py-3 border border-[#A3E4D7] text-[#1E1E1E] rounded-lg hover:bg-[#A3E4D7]/10 transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 border-2 border-[#FFD700] text-[#1E1E1E] font-bold rounded-lg hover:bg-[#FFD700]/10 transition-colors"
               >
                 Sign in with Password
               </motion.button>
@@ -279,9 +315,10 @@ export default function WalletPage() {
             {/* Trust Badges */}
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              whileInView={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex flex-wrap justify-center items-center gap-8 mt-12"
+              viewport={{ once: true }}
+              className="flex flex-wrap justify-center items-center gap-12 mt-16"
             >
               {trustBadges.map((badge) => (
                 <motion.div 
@@ -293,8 +330,8 @@ export default function WalletPage() {
                   <Image
                     src={badge.logo}
                     alt={badge.alt}
-                    width={100}
-                    height={40}
+                    width={120}
+                    height={48}
                     className="grayscale hover:grayscale-0 transition-all duration-300"
                   />
                 </motion.div>
@@ -302,7 +339,7 @@ export default function WalletPage() {
             </motion.div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 } 
