@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M20 10C20 4.47715 24.4772 0 30 0H90C95.5228 0 100 4.47715 100 10V30C100 35.5228 95.5228 40 90 40H30C24.4772 40 20 35.5228 20 30V10Z" fill="#28A745"/>
+  <path d="M30 20C30 15.5817 33.5817 12 38 12H82C86.4183 12 90 15.5817 90 20C90 24.4183 86.4183 28 82 28H38C33.5817 28 30 24.4183 30 20Z" fill="#FFD700"/>
+  <text x="60" y="25" font-family="Arial" font-size="16" font-weight="bold" fill="#1E1E1E" text-anchor="middle">FreoWallet</text>
+</svg> 

@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import { ConnectWalletButton } from '@/components/ConnectWalletButton';
-import { Logo } from '@/components/Logo';
+import Logo from '@/components/Logo';
 
 const carouselItems = [
   {
@@ -86,8 +86,7 @@ export default function WalletPage() {
 
       {/* Hero Section */}
       <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1E1E1E] to-[#2D2D2D] opacity-90" />
-        <div className="absolute inset-0 bg-[url('/images/hero-bg.png')] bg-cover bg-center opacity-20" />
+        <div className="absolute inset-0 bg-[#8FBC8F] bg-gradient-to-b from-[#98FB98]/90 to-[#1E1E1E]" />
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
           <div className="text-center">
@@ -95,7 +94,7 @@ export default function WalletPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-4xl md:text-6xl font-bold text-white mb-8"
+              className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-[#FFC107]"
             >
               Welcome to FreoWallet
             </motion.h1>
@@ -103,7 +102,7 @@ export default function WalletPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto"
+              className="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto"
             >
               Your gateway to the decentralized web. Secure, simple, and ready for the future.
             </motion.p>
@@ -124,19 +123,19 @@ export default function WalletPage() {
         </div>
       </div>
 
-      {/* Bottom Section */}
-      <div className="bg-[#1E1E1E] py-16">
+      {/* Login Section */}
+      <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-left">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#FFC107] mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#1E1E1E] mb-6 font-serif">
               Welcome to FreoWallet
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl">
+            <p className="text-xl text-gray-700 mb-8 max-w-3xl">
               Experience the future of digital finance with FreoWallet. Your secure, user-friendly gateway to the decentralized web.
             </p>
             <div className="flex flex-col sm:flex-row items-start gap-4">
               <button className="px-6 py-3 bg-[#FFC107] text-[#1E1E1E] font-medium rounded-lg hover:bg-[#FFD54F] transition-colors">
-                Get Started
+                Sign in with Password
               </button>
               <button className="px-6 py-3 border border-[#FFC107] text-[#FFC107] font-medium rounded-lg hover:bg-[#FFC107]/10 transition-colors">
                 Learn More

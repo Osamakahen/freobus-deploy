@@ -73,12 +73,6 @@ export default function Navbar({ onFreoBusClick }: NavbarProps) {
               >
                 Web3 Shopping Mall
               </Link>
-              <Link
-                href="/wallet"
-                className="text-gray-300 hover:text-[#FFC107] transition-colors text-sm"
-              >
-                Get Your FreoWallet
-              </Link>
               <MotionButton
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}

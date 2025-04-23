@@ -30,6 +30,11 @@ interface CustomLinkProps extends Omit<LinkProps, 'onClick'> {
   className?: string;
 }
 
+interface NavItem {
+  label: string;
+  href: string;
+}
+
 const CustomLink: React.FC<CustomLinkProps> = ({ onClick, children, className, ...props }) => {
   return (
     <div onClick={onClick}>
@@ -166,6 +171,13 @@ const pulseAnimation = {
   }
 };
 
+const navItems: NavItem[] = [
+  { label: 'Home', href: '/' },
+  { label: 'Discover Hub', href: '/discover' },
+  { label: 'FreoWallet', href: '/wallet' },
+  { label: "What's Web3", href: '#web3' },
+];
+
 export default function Page() {
   const [activeAudience, setActiveAudience] = useState<keyof typeof audienceContent>('users');
   const [showVideoModal, setShowVideoModal] = useState(false);
@@ -186,9 +198,21 @@ export default function Page() {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
 
-  // Handle video loading
-  const handleVideoLoad = (event: React.SyntheticEvent<HTMLVideoElement>) => {
-    setIsVideoLoaded(true);
+  // Handle video loading and errors
+  const handleVideoLoad = (event: React.SyntheticEvent<HTMLVideoElement>, setLoaded: (loaded: boolean) => void) => {
+    setLoaded(true);
+    setVideoError(null);
+  };
+
+  const handleVideoError = (event: React.SyntheticEvent<HTMLVideoElement>) => {
+    setVideoError('Failed to load video. Please try again.');
+  };
+
+  // Handle Web3 nav click
+  const handleWeb3Click = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowWeb3Modal(true);
+    setActiveAudience('web3');
   };
 
   // Cleanup video resources when modal closes
@@ -551,7 +575,8 @@ export default function Page() {
                   controls
                   className="absolute inset-0 w-full h-full rounded-xl object-cover"
                   preload="metadata"
-                  onLoadedData={handleVideoLoad}
+                  onLoadedData={(e) => handleVideoLoad(e, setIsVideoLoaded)}
+                  onError={handleVideoError}
                   aria-label="FreoBus demo video"
                   playsInline
                 >
@@ -637,12 +662,24 @@ export default function Page() {
                 className="relative aspect-video w-full max-w-4xl bg-[#2A2A2A] rounded-xl overflow-hidden shadow-2xl"
                 onClick={e => e.stopPropagation()}
               >
+                {!isWeb3VideoLoaded && !videoError && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-[#2A2A2A]">
+                    <div className="w-12 h-12 border-4 border-[#FFC107] border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                )}
+                {videoError && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-[#2A2A2A] text-red-500">
+                    {videoError}
+                  </div>
+                )}
                 <video
                   ref={web3VideoRef}
                   controls
                   autoPlay
                   className="absolute inset-0 w-full h-full rounded-xl object-cover"
                   preload="metadata"
+                  onLoadedData={(e) => handleVideoLoad(e, setIsWeb3VideoLoaded)}
+                  onError={handleVideoError}
                   aria-label="Web3 explanation video"
                   playsInline
                 >
