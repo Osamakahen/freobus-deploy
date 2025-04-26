@@ -2,9 +2,10 @@
 
 import './globals.css';
 import { Inter } from 'next/font/google';
-import Navbar from '@/components/Navbar';
+import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import { WalletProvider } from '@/context/WalletContext';
+import { NetworkProvider } from '@/context/NetworkContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,11 +22,13 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} bg-[#1E1E1E] text-white min-h-screen flex flex-col`}>
         <WalletProvider>
-          <Navbar />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
+          <NetworkProvider>
+            <Navigation />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </NetworkProvider>
         </WalletProvider>
       </body>
     </html>
