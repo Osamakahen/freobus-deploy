@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import Logo from './Logo';
 import { MotionButton } from './motion';
+import { ConnectWalletButton } from './ConnectWalletButton';
 
 interface NavbarProps {
   onFreoBusClick?: () => void;
@@ -73,13 +74,7 @@ export default function Navbar({ onFreoBusClick }: NavbarProps) {
               >
                 Web3 Shopping Mall
               </Link>
-              <MotionButton
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="px-3 py-1.5 bg-gradient-to-r from-[#FFC107] to-[#FFD700] text-[#1E1E1E] rounded-lg text-sm font-medium hover:from-[#FFD700] hover:to-[#FFE44D] transition-all"
-              >
-                Connect Wallet
-              </MotionButton>
+              <ConnectWalletButton />
             </div>
           )}
         </div>

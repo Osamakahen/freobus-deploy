@@ -1,453 +1,65 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import Navbar from '@/components/Navbar';
-import { ConnectWalletButton } from '@/components/ConnectWalletButton';
-import Logo from '@/components/Logo';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-
-const carouselItems = [
-  {
-    id: 1,
-    title: 'Experience the Magic of FreoWallet',
-    icon: '✨',
-    description: 'Seamless Web3 experience at your fingertips'
-  },
-  {
-    id: 2,
-    title: 'Auto-Connect',
-    icon: '🔗',
-    description: 'One-click connection to all your favorite dApps'
-  },
-  {
-    id: 3,
-    title: 'Omni-Chain',
-    icon: '⛓️',
-    description: 'Access multiple blockchains with a single wallet'
-  },
-  {
-    id: 4,
-    title: 'Invisible Security',
-    icon: '🛡️',
-    description: 'Enterprise-grade security without the complexity'
-  }
-];
-
-const trustBadges = [
-  { name: 'Certik', logo: '/certik-logo.svg', alt: 'Certik Audited' },
-  { name: 'Polygon', logo: '/polygon-logo.svg', alt: 'Polygon Network' },
-  { name: 'Arbitrum', logo: '/arbitrum-logo.svg', alt: 'Arbitrum Network' }
-];
-
-const navVariants = {
-  hidden: { 
-    opacity: 0, 
-    y: -20,
-    backdropFilter: 'blur(0px)'
-  },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    backdropFilter: 'blur(10px)',
-    transition: { 
-      duration: 0.5,
-      ease: "easeOut"
-    }
-  }
-};
-
-const carouselVariants = {
-  enter: { 
-    opacity: 0, 
-    x: 100,
-    scale: 0.95
-  },
-  center: { 
-    opacity: 1, 
-    x: 0,
-    scale: 1,
-    transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 30
-    }
-  },
-  exit: { 
-    opacity: 0, 
-    x: -100,
-    scale: 0.95
-  }
-};
-
-const trustBadgeVariants = {
-  initial: { scale: 1, opacity: 0.7 },
-  hover: { 
-    scale: 1.1,
-    opacity: 1,
-    transition: {
-      type: "spring",
-      stiffness: 400,
-      damping: 10
-    }
-  }
-};
-
-const logoVariants = {
-  initial: { scale: 1 },
-  hover: { 
-    scale: 1.05,
-    transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 10
-    }
-  }
-};
-
-const buttonVariants = {
-  initial: { scale: 1 },
-  hover: { 
-    scale: 1.05,
-    transition: {
-      type: "spring",
-      stiffness: 400,
-      damping: 10
-    }
-  },
-  tap: { 
-    scale: 0.95,
-    transition: {
-      type: "spring",
-      stiffness: 400,
-      damping: 10
-    }
-  }
-};
+import React from 'react';
+import { useWallet } from '@/context/WalletContext';
+import { motion } from 'framer-motion';
+import { ethers } from 'ethers';
 
 export default function WalletPage() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const router = useRouter();
+  const { account, provider, isConnected } = useWallet();
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselItems.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  const handleSendTransaction = async () => {
+    if (!provider || !account) return;
+
+    try {
+      const signer = await provider.getSigner();
+      const tx = await signer.sendTransaction({
+        to: account, // Send to self for demo
+        value: ethers.parseEther('0.001'), // 0.001 ETH
+      });
+      
+      console.log('Transaction sent:', tx.hash);
+      alert('Transaction sent! Check console for hash.');
+    } catch (error) {
+      console.error('Error sending transaction:', error);
+      alert('Failed to send transaction. Please try again.');
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Top Section - Promotional Banner */}
-      <div className="relative h-screen bg-gradient-to-b from-[#8FBC8F] to-[#1E1E1E]">
-        {/* Navigation */}
-        <motion.nav
-          variants={navVariants}
-          initial="hidden"
-          animate="visible"
-          className="fixed w-full top-0 z-50 bg-[#1E1E1E]/80 backdrop-blur-sm border-b border-[#FFD700]/10"
+    <div className="min-h-screen bg-[#1E1E1E] text-white pt-20">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-[#2A2A2A] rounded-xl p-8 shadow-lg"
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-20">
-              <div className="flex items-center space-x-8">
-                <motion.div
-                  variants={logoVariants}
-                  initial="initial"
-                  whileHover="hover"
-                  className="flex items-center"
-                >
-                  <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] tracking-wider">
-                    FreoWallet
-                  </span>
-                </motion.div>
-                <div className="hidden md:flex items-center space-x-8">
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Link href="/learn" className="text-gray-300 hover:text-[#FFD700] transition-colors duration-300">
-                      Learn More
-                    </Link>
-                  </motion.div>
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Link href="/faq" className="text-gray-300 hover:text-[#FFD700] transition-colors duration-300">
-                      FAQ
-                    </Link>
-                  </motion.div>
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Link href="/" className="text-gray-300 hover:text-[#FFD700] transition-colors duration-300">
-                      Back to Home
-                    </Link>
-                  </motion.div>
-                </div>
+          <h1 className="text-3xl font-bold mb-6">Your Wallet</h1>
+          
+          {isConnected ? (
+            <div className="space-y-6">
+              <div className="bg-[#3A3A3A] p-4 rounded-lg">
+                <h2 className="text-xl font-semibold mb-2">Account</h2>
+                <p className="font-mono break-all">{account}</p>
               </div>
-              <div className="flex items-center space-x-6">
-                <motion.button
-                  variants={buttonVariants}
-                  initial="initial"
-                  whileHover="hover"
-                  whileTap="tap"
-                  className="hidden md:block px-6 py-2 bg-gradient-to-r from-[#FFD700] to-[#DAA520] text-[#1E1E1E] font-semibold rounded-lg hover:shadow-lg transition-all duration-300"
-                >
-                  Get Started
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  className="text-gray-300 hover:text-[#FFD700] transition-colors md:hidden"
-                  aria-label="Open menu"
-                >
-                  <Bars3Icon className="h-6 w-6" />
-                </motion.button>
-              </div>
-            </div>
-          </div>
-        </motion.nav>
 
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, x: '100%' }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: '100%' }}
-              className="fixed inset-0 bg-[#1E1E1E] z-50 p-4"
-            >
-              <div className="flex justify-end mb-8">
+              <div className="flex flex-col space-y-4">
                 <button
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-gray-300 hover:text-[#FFC107]"
-                  aria-label="Close menu"
+                  onClick={handleSendTransaction}
+                  className="px-6 py-3 bg-[#FFC107] text-[#1E1E1E] rounded-lg font-medium hover:bg-[#FFD700] transition-colors"
                 >
-                  <XMarkIcon className="h-6 w-6" />
+                  Send Test Transaction
                 </button>
               </div>
-              <div className="space-y-4">
-                <div onClick={() => setIsMenuOpen(false)}>
-                  <Link 
-                    href="/learn" 
-                    className="block text-gray-300 hover:text-[#FFC107] transition-colors duration-300"
-                  >
-                    Learn More
-                  </Link>
-                </div>
-                <div onClick={() => setIsMenuOpen(false)}>
-                  <Link 
-                    href="/faq" 
-                    className="block text-gray-300 hover:text-[#FFC107] transition-colors duration-300"
-                  >
-                    FAQ
-                  </Link>
-                </div>
-                <div onClick={() => setIsMenuOpen(false)}>
-                  <Link 
-                    href="/" 
-                    className="block text-gray-300 hover:text-[#FFC107] transition-colors duration-300"
-                  >
-                    Back to Home
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Banner Content */}
-        <div className="relative h-full flex flex-col items-center justify-center px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="relative z-10"
-          >
-            <motion.h1
-              className="text-4xl md:text-5xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B] font-montserrat"
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300, damping: 10 }}
-            >
-              Your Trusted and Easy-Going Web3 Mate
-            </motion.h1>
-          </motion.div>
-
-          {/* Carousel */}
-          <div className="relative w-full max-w-2xl mx-auto">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentSlide}
-                variants={carouselVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="text-center"
-              >
-                <motion.div 
-                  className="text-6xl mb-4"
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ 
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 20,
-                    delay: 0.2
-                  }}
-                >
-                  {carouselItems[currentSlide].icon}
-                </motion.div>
-                <motion.h2 
-                  className="text-2xl md:text-3xl font-bold text-white mb-2"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ 
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 20,
-                    delay: 0.3
-                  }}
-                >
-                  {carouselItems[currentSlide].title}
-                </motion.h2>
-                <motion.p 
-                  className="text-gray-200 text-lg"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ 
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 20,
-                    delay: 0.4
-                  }}
-                >
-                  {carouselItems[currentSlide].description}
-                </motion.p>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Pagination Dots */}
-            <div className="flex justify-center mt-8 space-x-2">
-              {carouselItems.map((_, index) => (
-                <motion.button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`w-3 h-3 rounded-full transition-colors ${
-                    currentSlide === index ? 'bg-[#FFC107]' : 'bg-gray-400'
-                  }`}
-                  whileTap={{ scale: 0.9 }}
-                  variants={trustBadgeVariants}
-                  initial="initial"
-                  whileHover="hover"
-                />
-              ))}
             </div>
-          </div>
-        </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-xl mb-4">Connect your wallet to get started</p>
+              <p className="text-gray-400">Please use the Connect Wallet button in the navigation bar</p>
+            </div>
+          )}
+        </motion.div>
       </div>
-
-      {/* Bottom Section - Sign Up/Login */}
-      <motion.div 
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        viewport={{ once: true }}
-        className="relative bg-white py-24 overflow-hidden"
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1E1E1E]/5 to-transparent" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-bold text-[#1E1E1E] mb-6 font-montserrat"
-            >
-              Welcome to <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FFD700] via-[#DAA520] to-[#B8860B]">FreoWallet</span>
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="text-xl text-gray-700 mb-12 max-w-3xl mx-auto"
-            >
-              Experience the future of digital finance with FreoWallet. Your secure, user-friendly gateway to the decentralized web.
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              viewport={{ once: true }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12"
-            >
-              <motion.button
-                variants={buttonVariants}
-                initial="initial"
-                whileHover="hover"
-                whileTap="tap"
-                className="px-8 py-4 bg-gradient-to-r from-[#FFD700] to-[#DAA520] text-[#1E1E1E] font-bold rounded-lg hover:shadow-lg transition-all duration-300 shadow-md"
-              >
-                Get FreoWallet Now
-                <motion.span 
-                  className="inline-block ml-2"
-                  initial={{ x: 0 }}
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  →
-                </motion.span>
-              </motion.button>
-              <motion.button 
-                variants={buttonVariants}
-                initial="initial"
-                whileHover="hover"
-                whileTap="tap"
-                className="px-8 py-4 border-2 border-[#FFD700] text-[#1E1E1E] font-bold rounded-lg hover:bg-[#FFD700]/10 transition-colors"
-              >
-                Sign in with Password
-              </motion.button>
-            </motion.div>
-
-            {/* Trust Badges */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              viewport={{ once: true }}
-              className="flex flex-wrap justify-center items-center gap-12 mt-16"
-            >
-              {trustBadges.map((badge) => (
-                <motion.div 
-                  key={badge.name} 
-                  className="flex items-center"
-                  variants={trustBadgeVariants}
-                  initial="initial"
-                  whileHover="hover"
-                >
-                  <Image
-                    src={badge.logo}
-                    alt={badge.alt}
-                    width={120}
-                    height={48}
-                    className="grayscale hover:grayscale-0 transition-all duration-300"
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </div>
-      </motion.div>
     </div>
   );
 } 
