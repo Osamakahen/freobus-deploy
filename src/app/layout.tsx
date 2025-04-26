@@ -1,15 +1,12 @@
+'use client';
+
 import './globals.css';
 import { Inter } from 'next/font/google';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Metadata } from 'next';
+import { WalletProvider } from '@/context/WalletContext';
 
 const inter = Inter({ subsets: ['latin'] });
-
-export const metadata: Metadata = {
-  title: 'FreoBus - Next Generation DEX',
-  description: 'Experience seamless trading and liquidity provision with our advanced DEX platform.',
-};
 
 export default function RootLayout({
   children,
@@ -18,12 +15,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <title>FreoBus - Next Generation DEX</title>
+        <meta name="description" content="Experience seamless trading and liquidity provision with our advanced DEX platform." />
+      </head>
       <body className={`${inter.className} bg-[#1E1E1E] text-white min-h-screen flex flex-col`}>
-        <Navbar />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
+        <WalletProvider>
+          <Navbar />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+        </WalletProvider>
       </body>
     </html>
   );

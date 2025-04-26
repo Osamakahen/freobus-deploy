@@ -28,8 +28,6 @@
   "env": {
     "NEXT_PUBLIC_WALLET_ENABLED": "true",
     "NEXT_PUBLIC_WALLET_PROVIDER": "metamask",
-    "NEXT_PUBLIC_DEFAULT_CHAIN_ID": "1",
-    "NEXT_PUBLIC_INFURA_ID": "@infura_id",
-    "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID": "@wallet_connect_project_id"
+    "NEXT_PUBLIC_DEFAULT_CHAIN_ID": "1"
   }
 } 
