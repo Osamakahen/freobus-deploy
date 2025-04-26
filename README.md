@@ -1,63 +1,62 @@
-# FreoBus - Next Generation DEX
+# FreoBusPlatform - Unified Web3 Wallet & Marketplace
 
-FreoBus is a modern decentralized exchange platform built with Next.js, offering seamless trading and liquidity provision capabilities.
+FreoBusPlatform is a next-generation unified Web3 platform that seamlessly integrates a modern crypto wallet dashboard and a dApp marketplace. Users can connect their wallet once and enjoy seamless navigation, wallet-aware dApp interactions, and a consistent experience across all features.
 
 ## Features
 
-- Modern, responsive UI with Tailwind CSS
-- Web3 wallet integration
-- Real-time trading interface
-- Liquidity provision tools
-- Mobile-friendly design
+- **Unified Web3 Wallet & Marketplace**: One platform for managing assets and exploring dApps.
+- **Global Wallet Connection**: Connect your wallet once—use it everywhere (dashboard, dApps, marketplace).
+- **Modern, Responsive UI**: Built with Next.js, Tailwind CSS, and Framer Motion.
+- **dApp Marketplace**: Browse, search, and filter real dApps (Uniswap, OpenSea, Mirror.xyz, ENS, and more).
+- **Wallet Dashboard**: View wallet status, send transactions, and access (coming soon) portfolio, transaction history, NFTs, and settings.
+- **Seamless Navigation**: Unified navigation bar for Portfolio, Transactions, NFTs, DApps, and Settings.
+- **Placeholder Pages**: No more 404s—each section has a "Coming Soon" page until fully implemented.
 
 ## Tech Stack
 
 - Next.js 14
 - TypeScript
 - Tailwind CSS
-- Web3 Integration
 - Framer Motion
+- Ethers.js
+- viem
 
 ## Getting Started
 
-1. Clone the repository:
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/yourusername/freobus.git
    cd freobus
    ```
-
-2. Install dependencies:
+2. **Install dependencies:**
    ```bash
    npm install
    ```
-
-3. Create a `.env.local` file in the root directory and add your environment variables:
-   ```
-   NEXT_PUBLIC_APP_NAME=FreoBus
-   NEXT_PUBLIC_APP_URL=http://localhost:3000
-   ```
-
-4. Run the development server:
+3. **Run the development server:**
    ```bash
    npm run dev
    ```
-
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+4. **Open [http://localhost:3000](http://localhost:3000) in your browser.**
 
 ## Project Structure
 
 ```
-freobus/
+freobus-deploy/
 ├── public/                    # Static assets
-├── src/                      # App source code
-│   ├── app/                  # Next.js 13+ app directory
-│   └── components/           # Reusable UI components
-├── .env.local               # Environment variables
-├── next.config.js           # Next.js configuration
-├── package.json             # Dependencies and scripts
-├── postcss.config.js        # PostCSS configuration
-├── tailwind.config.js       # Tailwind configuration
-└── tsconfig.json            # TypeScript configuration
+├── src/
+│   ├── app/                  # Next.js app directory (routes, pages)
+│   │   ├── marketplace/      # Marketplace page and components
+│   │   ├── wallet/           # Wallet dashboard page
+│   │   ├── history/          # Transactions placeholder
+│   │   ├── nfts/             # NFTs placeholder
+│   │   ├── dapps/            # DApps placeholder
+│   │   └── settings/         # Settings placeholder
+│   ├── components/           # Reusable UI components (Navigation, WalletUI, AppCard, etc.)
+│   └── context/              # Global context providers (Wallet, Network)
+├── next.config.js            # Next.js configuration
+├── package.json              # Dependencies and scripts
+├── tailwind.config.js        # Tailwind configuration
+└── tsconfig.json             # TypeScript configuration
 ```
 
 ## Contributing
@@ -67,6 +66,11 @@ freobus/
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+**You can contribute to:**
+- Wallet dashboard features (portfolio, transactions, NFTs, etc.)
+- Marketplace dApp integration and UI
+- Navigation and global state improvements
 
 ## License
 
