@@ -1,18 +1,17 @@
 ﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
-  images: {
-    domains: ['images.unsplash.com'],
-    unoptimized: true
-  },
-  // Disable type checking during builds for better performance
+  reactStrictMode: true,
+  swcMinify: true,
   typescript: {
-    ignoreBuildErrors: true
+    ignoreBuildErrors: false,
   },
-  // Disable ESLint during builds for better performance
-  eslint: {
-    ignoreDuringBuilds: true
-  }
-};
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+    };
+    return config;
+  },
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

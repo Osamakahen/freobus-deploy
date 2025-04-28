@@ -3,72 +3,76 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 
-// Add type for window.ethereum
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: any[] }) => Promise<any>;
-      on: (event: string, callback: (accounts: string[]) => void) => void;
-      removeListener: (event: string, callback: (accounts: string[]) => void) => void;
-    };
-  }
-}
-
 interface WalletContextType {
   account: string | null;
   provider: ethers.BrowserProvider | null;
+  isConnected: boolean;
+  isFreoWallet: boolean;
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
-  isConnected: boolean;
 }
 
-const WalletContext = createContext<WalletContextType | undefined>(undefined);
+const WalletContext = createContext<WalletContextType>({
+  account: null,
+  provider: null,
+  isConnected: false,
+  isFreoWallet: false,
+  connectWallet: async () => {},
+  disconnectWallet: () => {},
+});
+
+export const useWallet = () => useContext(WalletContext);
 
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [account, setAccount] = useState<string | null>(null);
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [isFreoWallet, setIsFreoWallet] = useState(false);
 
   useEffect(() => {
-    // Check if MetaMask is installed
-    if (typeof window.ethereum !== 'undefined') {
-      const web3Provider = new ethers.BrowserProvider(window.ethereum);
-      setProvider(web3Provider);
+    const checkWallet = async () => {
+      if (typeof window !== 'undefined' && window.ethereum) {
+        setIsFreoWallet(!!window.ethereum.isFreoWallet);
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        setProvider(provider);
 
-      // Check if already connected
-      window.ethereum.request({ method: 'eth_accounts' })
-        .then((accounts: string[]) => {
+        try {
+          const accounts = await provider.listAccounts();
           if (accounts.length > 0) {
-            setAccount(accounts[0]);
+            setAccount(accounts[0].address);
             setIsConnected(true);
           }
-        });
-    }
+        } catch (error) {
+          console.error('Error checking wallet:', error);
+        }
+      }
+    };
+
+    checkWallet();
   }, []);
 
   const connectWallet = async () => {
-    try {
-      if (!provider) {
-        alert('Please install MetaMask!');
-        return;
+    if (typeof window !== 'undefined' && window.ethereum) {
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const accounts = await provider.send('eth_requestAccounts', []);
+        
+        if (accounts.length > 0) {
+          setAccount(accounts[0]);
+          setProvider(provider);
+          setIsConnected(true);
+        }
+      } catch (error) {
+        console.error('Error connecting wallet:', error);
       }
-
-      const accounts = await window.ethereum?.request({
-        method: 'eth_requestAccounts',
-      });
-
-      if (accounts && accounts.length > 0) {
-        setAccount(accounts[0]);
-        setIsConnected(true);
-      }
-    } catch (error) {
-      console.error('Error connecting wallet:', error);
-      alert('Failed to connect wallet. Please try again.');
+    } else {
+      console.log('Please install a Web3 wallet');
     }
   };
 
   const disconnectWallet = () => {
     setAccount(null);
+    setProvider(null);
     setIsConnected(false);
   };
 
@@ -77,20 +81,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       value={{
         account,
         provider,
+        isConnected,
+        isFreoWallet,
         connectWallet,
         disconnectWallet,
-        isConnected,
       }}
     >
       {children}
     </WalletContext.Provider>
   );
-};
-
-export const useWallet = () => {
-  const context = useContext(WalletContext);
-  if (context === undefined) {
-    throw new Error('useWallet must be used within a WalletProvider');
-  }
-  return context;
 }; 

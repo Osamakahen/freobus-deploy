@@ -1,164 +1,97 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { ethers } from 'ethers';
-import { mainnet } from 'viem/chains';
-import { Address } from 'viem';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-interface NetworkState {
-  chainId: number;
-  networkName: string;
-  symbol: string;
-  rpcUrl: string;
-  explorer?: string;
-  address: Address | null;
-  isConnected: boolean;
-  error: string | null;
+declare global {
+  interface Window {
+    ethereum?: {
+      isFreoWallet?: boolean;
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      send: (method: string, params: any[]) => Promise<any>;
+      on: (event: string, callback: (...args: any[]) => void) => void;
+      removeListener: (event: string, callback: (...args: any[]) => void) => void;
+    };
+  }
 }
 
-interface NetworkError {
+interface NetworkContextType {
+  chainId: string | null;
+  switchNetwork: (chainId: string) => Promise<void>;
+}
+
+interface SwitchNetworkError extends Error {
   code: number;
-  message: string;
-  details?: unknown;
 }
 
-interface NetworkResponse<T = unknown> {
-  status: number;
-  data: T;
-  error?: NetworkError;
-}
+const NetworkContext = createContext<NetworkContextType>({
+  chainId: null,
+  switchNetwork: async () => {},
+});
 
-export interface NetworkContextType extends NetworkState {
-  setChainId: (chainId: number) => void;
-  setAddress: (address: Address | null) => void;
-  setIsConnected: (isConnected: boolean) => void;
-  setError: (error: string | null) => void;
-  switchNetwork: (chainId: string | number) => Promise<void>;
-  loading: boolean;
-}
+export const useNetwork = () => useContext(NetworkContext);
 
-const NetworkContext = createContext<NetworkContextType | undefined>(undefined);
+export const NetworkProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [chainId, setChainId] = useState<string | null>(null);
 
-export function NetworkProvider({ children }: { children: ReactNode }) {
-  const [network, setNetwork] = useState<NetworkState>({
-    chainId: mainnet.id,
-    networkName: mainnet.name,
-    symbol: mainnet.nativeCurrency.symbol,
-    rpcUrl: mainnet.rpcUrls.default.http[0],
-    explorer: mainnet.blockExplorers?.default.url,
-    address: null,
-    isConnected: false,
-    error: null
-  });
-  const [loading, setLoading] = useState(false);
-
-  const updateNetwork = useCallback(async (chainId: number) => {
-    try {
-      setLoading(true);
-      setNetwork(prev => ({ ...prev, error: null }));
-
-      if (typeof window === 'undefined' || !window.ethereum) {
-        throw new Error("Ethereum provider not found");
+  useEffect(() => {
+    const checkNetwork = async () => {
+      if (typeof window !== 'undefined' && window.ethereum) {
+        try {
+          const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+          if (typeof chainId === 'string') {
+            setChainId(chainId);
+          }
+        } catch (error) {
+          console.error('Error getting chain ID:', error);
+        }
       }
+    };
 
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const network = await provider.getNetwork();
-      
-      setNetwork({
-        chainId: Number(network.chainId),
-        networkName: network.name || `Chain ${network.chainId}`,
-        symbol: mainnet.nativeCurrency.symbol,
-        rpcUrl: mainnet.rpcUrls.default.http[0],
-        explorer: mainnet.blockExplorers?.default.url,
-        address: null,
-        isConnected: true,
-        error: null
-      });
-    } catch (err) {
-      setNetwork(prev => ({ ...prev, error: err instanceof Error ? err.message : 'Failed to update network' }));
-    } finally {
-      setLoading(false);
+    checkNetwork();
+
+    const ethereum = window.ethereum;
+    if (ethereum) {
+      const handleChainChanged = (newChainId: unknown) => {
+        if (typeof newChainId === 'string') {
+          setChainId(newChainId);
+        }
+      };
+
+      ethereum.on('chainChanged', handleChainChanged);
+
+      return () => {
+        ethereum.removeListener('chainChanged', handleChainChanged);
+      };
     }
   }, []);
 
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.ethereum) return;
+  const switchNetwork = async (targetChainId: string) => {
+    if (!window.ethereum) return;
 
-    const handleChainChanged = (params: unknown) => {
-      const chainId = typeof params === 'string' ? params : 
-                     typeof params === 'object' && params !== null && 'chainId' in params ? 
-                     (params as { chainId: string }).chainId : 
-                     '0x1';
-      updateNetwork(Number(chainId));
-    };
-
-    const ethereum = window.ethereum;
-    ethereum.on('chainChanged', handleChainChanged);
-
-    return () => {
-      ethereum.removeListener('chainChanged', handleChainChanged);
-    };
-  }, [updateNetwork]);
-
-  const setChainId = (chainId: number) => {
-    setNetwork(prev => ({ ...prev, chainId }));
-  };
-
-  const setAddress = (address: Address | null) => {
-    setNetwork(prev => ({ ...prev, address }));
-  };
-
-  const setIsConnected = (isConnected: boolean) => {
-    setNetwork(prev => ({ ...prev, isConnected }));
-  };
-
-  const setError = (error: string | null) => {
-    setNetwork(prev => ({ ...prev, error }));
-  };
-
-  const switchNetwork = async (chainId: string | number) => {
     try {
-      setLoading(true);
-      setNetwork(prev => ({ ...prev, error: null }));
-
-      if (typeof window === 'undefined' || !window.ethereum) {
-        throw new Error("Ethereum provider not found");
-      }
-
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: `0x${Number(chainId).toString(16)}` }],
+        params: [{ chainId: targetChainId }],
       });
-
-      await updateNetwork(Number(chainId));
-    } catch (err) {
-      setNetwork(prev => ({ ...prev, error: err instanceof Error ? err.message : 'Failed to switch network' }));
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      const switchError = error as SwitchNetworkError;
+      if (switchError.code === 4902) {
+        // Chain not added to wallet
+        console.error('This network needs to be added to your wallet');
+      } else {
+        console.error('Error switching network:', error);
+      }
     }
   };
 
   return (
     <NetworkContext.Provider
       value={{
-        ...network,
-        setChainId,
-        setAddress,
-        setIsConnected,
-        setError,
+        chainId,
         switchNetwork,
-        loading
       }}
     >
       {children}
     </NetworkContext.Provider>
   );
-}
-
-export function useNetwork() {
-  const context = useContext(NetworkContext);
-  if (context === undefined) {
-    throw new Error('useNetwork must be used within a NetworkProvider');
-  }
-  return context;
-} 
+}; 
