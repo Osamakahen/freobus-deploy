@@ -5,7 +5,6 @@ import { ethers } from 'ethers';
 
 interface WalletContextType {
   account: string | null;
-  provider: ethers.BrowserProvider | null;
   isConnected: boolean;
   isFreoWallet: boolean;
   connectWallet: () => Promise<void>;
@@ -14,7 +13,6 @@ interface WalletContextType {
 
 const WalletContext = createContext<WalletContextType>({
   account: null,
-  provider: null,
   isConnected: false,
   isFreoWallet: false,
   connectWallet: async () => {},
@@ -25,7 +23,6 @@ export const useWallet = () => useContext(WalletContext);
 
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [account, setAccount] = useState<string | null>(null);
-  const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isFreoWallet, setIsFreoWallet] = useState(false);
 
@@ -33,13 +30,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const checkWallet = async () => {
       if (typeof window !== 'undefined' && window.ethereum) {
         setIsFreoWallet(!!window.ethereum.isFreoWallet);
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        setProvider(provider);
-
+        
         try {
-          const accounts = await provider.listAccounts();
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' }) as string[];
           if (accounts.length > 0) {
-            setAccount(accounts[0].address);
+            setAccount(accounts[0]);
             setIsConnected(true);
           }
         } catch (error) {
@@ -54,12 +49,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const connectWallet = async () => {
     if (typeof window !== 'undefined' && window.ethereum) {
       try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const accounts = await provider.send('eth_requestAccounts', []);
-        
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }) as string[];
         if (accounts.length > 0) {
           setAccount(accounts[0]);
-          setProvider(provider);
           setIsConnected(true);
         }
       } catch (error) {
@@ -72,7 +64,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const disconnectWallet = () => {
     setAccount(null);
-    setProvider(null);
     setIsConnected(false);
   };
 
@@ -80,7 +71,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     <WalletContext.Provider
       value={{
         account,
-        provider,
         isConnected,
         isFreoWallet,
         connectWallet,
