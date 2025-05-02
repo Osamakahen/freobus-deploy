@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useWallet } from '@/context/WalletContext';
+import { useWallet } from '../../context/WalletContext';
 import Image from 'next/image';
 
 interface NFT {
