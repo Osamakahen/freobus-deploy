@@ -1,15 +1,15 @@
 'use client';
 import React, { useState } from 'react';
-import { useWallet } from '@/context/WalletContext';
+import { useWallet } from '../../context/WalletContext';
 
 const UniswapPage: React.FC = () => {
-  const { account, provider } = useWallet();
+  const { account, isConnected } = useWallet();
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSwap = async () => {
-    if (!provider || !account || !amount) return;
+    if (!isConnected || !account || !amount) return;
 
     setLoading(true);
     setError(null);
