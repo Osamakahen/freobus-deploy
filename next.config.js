@@ -8,6 +8,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  experimental: {
+    appDir: true,
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
