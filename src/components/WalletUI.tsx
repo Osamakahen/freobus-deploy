@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useWallet } from '@/context/WalletContext';
+import { useWallet } from '../app/context/WalletContext';
 
 const WalletUI: React.FC = () => {
   const { account, isConnected, connectWallet, disconnectWallet } = useWallet();
