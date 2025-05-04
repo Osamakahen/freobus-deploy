@@ -1,15 +1,11 @@
 ﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   images: {
     domains: ['*'],
   },
   typescript: {
     ignoreBuildErrors: false,
-  },
-  experimental: {
-    appDir: true,
   },
   webpack: (config) => {
     config.resolve.alias = {
