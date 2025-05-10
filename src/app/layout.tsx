@@ -1,7 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { WalletProvider } from './context/WalletContext';
-import { NetworkProvider } from './context/NetworkContext';
+import { WalletProvider } from '../../../src/app/context/WalletContext';
+import { NetworkProvider } from '../../../src/app/context/NetworkContext';
 
 export const metadata: Metadata = {
   title: 'FreoWallet',

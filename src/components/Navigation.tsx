@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useWallet } from '../app/context/WalletContext';
+import { useWallet } from '../../../src/app/context/WalletContext';
 
 const Navigation: React.FC = () => {
   const pathname = usePathname();

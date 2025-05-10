@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { useWallet } from '../../context/WalletContext';
+import { useWallet } from '../../../../src/app/context/WalletContext';
 
 const UniswapPage: React.FC = () => {
   const { account, isConnected } = useWallet();

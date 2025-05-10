@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { useWallet } from '../context/WalletContext';
-import { useNetwork } from '../context/NetworkContext';
+import { useWallet } from '../../../src/app/context/WalletContext';
+import { useNetwork } from '../../../src/app/context/NetworkContext';
 
 const Home: React.FC = () => {
   const { account, connectWallet } = useWallet();
