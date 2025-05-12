@@ -1,6 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import type { Network } from '../../../../shared/types/network';
+import networksJson from '../../../../shared/networks.json';
 
 declare global {
   interface Window {
@@ -14,9 +16,12 @@ declare global {
   }
 }
 
+const networks: Network[] = networksJson;
+
 interface NetworkContextType {
   chainId: string | null;
   switchNetwork: (chainId: string) => Promise<void>;
+  networks: Network[];
 }
 
 interface SwitchNetworkError extends Error {
@@ -26,9 +31,17 @@ interface SwitchNetworkError extends Error {
 const NetworkContext = createContext<NetworkContextType>({
   chainId: null,
   switchNetwork: async () => {},
+  networks: networks,
 });
 
 export const useNetwork = () => useContext(NetworkContext);
+
+// Utility to ensure chainId is hex
+function toHexChainId(chainId: string | number) {
+  if (typeof chainId === 'number') return '0x' + chainId.toString(16);
+  if (typeof chainId === 'string' && chainId.startsWith('0x')) return chainId;
+  return '0x' + parseInt(chainId, 10).toString(16);
+}
 
 export const NetworkProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [chainId, setChainId] = useState<string | null>(null);
@@ -71,7 +84,7 @@ export const NetworkProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: targetChainId }],
+        params: [{ chainId: toHexChainId(targetChainId) }],
       });
     } catch (error) {
       const switchError = error as SwitchNetworkError;
@@ -89,9 +102,12 @@ export const NetworkProvider: React.FC<{ children: React.ReactNode }> = ({ child
       value={{
         chainId,
         switchNetwork,
+        networks,
       }}
     >
       {children}
     </NetworkContext.Provider>
   );
-}; 
+};
+
+export type { NetworkContextType }; 
